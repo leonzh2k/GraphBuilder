@@ -25,4 +25,4 @@ UHP Year 3 Project
 * Will be harder to implement, but good learning experience if used 
 
 #### Bugs
-* When using Fabric, image quality of objects, text, etc. drawn on canvas seem to be dependent on the zoom level at the time the page was loaded. The more zoomed in you are, the better quality; the more zoomed out, the worse quality. Image quality is fixed, i.e. zooming after page load does not change the quality of the image. This may not be a library issue, maybe a problem with canvas itself.
+* When using Fabric, image quality of objects, text, etc. drawn on canvas seem to be dependent on the zoom level at the time the page was loaded. The more zoomed in you are, the better quality; the more zoomed out, the worse quality. Image quality is fixed, i.e. zooming after page load does not change the quality of the image. You can improve the quality of the image by resizing it with Fabric, but the image will no longer be the intended size. This may not be a library issue, maybe a problem with canvas itself.
