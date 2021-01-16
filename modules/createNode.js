@@ -22,17 +22,17 @@ export function createNode(nodeNumber) {
         hoverCursor: "pointer"
     });
     //disables rotating and resizing node
-    node.setControlsVisibility({
-        mt: false, 
-        mb: false, 
-        ml: false, 
-        mr: false, 
-        bl: false,
-        br: false, 
-        tl: false, 
-        tr: false,
-        mtr: false, 
-    });
+    // node.setControlsVisibility({
+    //     mt: false, 
+    //     mb: false, 
+    //     ml: false, 
+    //     mr: false, 
+    //     bl: false,
+    //     br: false, 
+    //     tl: false, 
+    //     tr: false,
+    //     mtr: false, 
+    // });
 
 
     node.hasBorders = false;
