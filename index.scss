@@ -2,7 +2,17 @@
     box-sizing: border-box;
 }
 
-#workspace {
+// html {
+//     height: 100%;
+// }
+
+body {
+    background-color: gray;
+    // height: 100%;
+}
+
+#graph-area {
     border: 2px red solid;
-    height: 1000px;
+    height: 750px;
+    width: 1250px;
 }

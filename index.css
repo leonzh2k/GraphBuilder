@@ -2,9 +2,14 @@
   box-sizing: border-box;
 }
 
-#workspace {
+body {
+  background-color: gray;
+}
+
+#graph-area {
   border: 2px red solid;
-  height: 1000px;
+  height: 750px;
+  width: 1250px;
 }
 
 /*# sourceMappingURL=index.css.map */
