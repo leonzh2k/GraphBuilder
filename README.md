@@ -15,7 +15,11 @@ UHP Year 3 Project
 * Objects on Canvas are actual objects that can be manipulated easily
 * Shapes come with built-in draggable, resizable, rotatable functionality
 * Full potential of this library may not be used
+* Objects are low-resolution
 
+#### Raphael.js
+* SVG, so no low resolution
+* Will take time to learn
 
 #### React 
 * Good for UI

@@ -1,0 +1,8 @@
+* {
+    box-sizing: border-box;
+}
+
+#workspace {
+    border: 2px red solid;
+    height: 1000px;
+}
