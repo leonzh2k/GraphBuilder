@@ -4,10 +4,15 @@ window.onload = function(e) {
   window.lockedNodes = [];
   window.existingEdges = [];
   window.nodeNumber = 0;
-  // window.graphArea = document.getElementById("graph-area");
-  // graphArea.ondblclick = function(e) {
-  //   addNodeUsingMouseCoords(e.clientX, e.clientY)
-  // }
+  window.graphArea = document.getElementById("graph-area");
+  graphArea.onmousedown = function(e) {
+    // console.log("clicked on graph space")
+    if (e.button === 2) {
+      console.log("right clicked on graph space")
+      //
+    }
+    // addNodeUsingMouseCoords(e.clientX, e.clientY)
+  }
 }
 // function addLabel() {
 //     let newNode = document.createElement("p");
