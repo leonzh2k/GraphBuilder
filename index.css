@@ -12,4 +12,15 @@ body {
   width: 1250px;
 }
 
+.graph-area-context-menu {
+  position: absolute;
+  height: 100px;
+  width: 200px;
+  background-color: #313131;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 /*# sourceMappingURL=index.css.map */

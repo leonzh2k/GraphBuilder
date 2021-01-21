@@ -1,3 +1,5 @@
+// import {graphAreaContextMenu} from './contextMenu.js'
+
 function onDragStart() {
     console.log("start")
     var a = this.set;
@@ -11,31 +13,33 @@ function onDragMove(dx,dy){
     a.translate(dx-a.ox, dy-a.oy);
     a.ox = dx;
     a.oy = dy;  
-    console.log("x: ", a.ox)
-    console.log("y: ", a.oy)
+    // console.log("x: ", a.ox)
+    // console.log("y: ", a.oy)
 }
 
 function onDragComplete(){
     var a = this.set
     console.log("complete")
-    console.log("x: ", a.ox)
-    console.log("y: ", a.oy)
+    // console.log("x: ", a.ox)
+    // console.log("y: ", a.oy)
 }
 
-export function createNode(graphArea) {
-    var circle = graphArea.circle(0,0, 150, 100, 3).attr({fill: "orange"});
-    var txt =  graphArea.text(75, 50, "My_Example");
+export function createNode(graphArea, mouseX, mouseY) {
+    var circle = graphArea.circle(mouseX, mouseY, 25).attr({fill: "yellow"});
+    var txt =  graphArea.text(mouseX, mouseY, "A");
     txt.attr({
         "width" : 150,
         "fill": "#000",
-        "font-size": "12pt",
+        "font-size": "18pt",
         "font-weight": "bold"
     });
 
     var node = graphArea.set(circle, txt);
     circle.set = node, txt.set = node;
 
+    //add draggable functionality to node
     node.drag(onDragMove, onDragStart, onDragComplete);
+    
     return node
     
 }
