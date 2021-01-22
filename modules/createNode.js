@@ -1,45 +1,16 @@
-// import {graphAreaContextMenu} from './contextMenu.js'
-
-function onDragStart() {
-    console.log("start")
-    var a = this.set;
-    a.ox = a.attr('x');
-    a.oy = a.attr('y');    
-}
-
-function onDragMove(dx,dy){
-    var a = this.set //this means we perform actions on the entire set 
-    console.log("moving")
-    a.translate(dx-a.ox, dy-a.oy);
-    a.ox = dx;
-    a.oy = dy;  
-    // console.log("x: ", a.ox)
-    // console.log("y: ", a.oy)
-}
-
-function onDragComplete(){
-    var a = this.set
-    console.log("complete")
-    // console.log("x: ", a.ox)
-    // console.log("y: ", a.oy)
-}
-
-export function createNode(graphArea, mouseX, mouseY) {
-    var circle = graphArea.circle(mouseX, mouseY, 25).attr({fill: "yellow"});
-    var txt =  graphArea.text(mouseX, mouseY, "A");
-    txt.attr({
-        "width" : 150,
-        "fill": "#000",
-        "font-size": "18pt",
-        "font-weight": "bold"
+export function createNode(mouseX, mouseY) {
+    var $node = $("<span style='backgroundColor: yellow; border:2px blue solid; border-radius:10px;'>NOde</span>");
+    //disables drag if you try to drag node with right click. drag is reenabled when you mouse up.
+    $node.on('mousedown',(e) => {
+        if (e.button == 2) {
+            console.log('should disable drag')
+            // $node.undrag()
+        }
     });
-
-    var node = graphArea.set(circle, txt);
-    circle.set = node, txt.set = node;
-
-    //add draggable functionality to node
-    node.drag(onDragMove, onDragStart, onDragComplete);
+    return $node
     
-    return node
-    
+}
+
+export function makeNodeDraggable($node) {
+    $node.draggable();
 }

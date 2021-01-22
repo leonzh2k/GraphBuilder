@@ -6,10 +6,21 @@ body {
   background-color: gray;
 }
 
+#site-wrapper {
+  border: 2px orange solid;
+  display: flex;
+  flex-direction: row;
+}
+
 #graph-area {
   border: 2px red solid;
   height: 750px;
-  width: 1250px;
+  width: 80%;
+}
+
+#control-panel {
+  height: 750px;
+  width: 20%;
 }
 
 .graph-area-context-menu {

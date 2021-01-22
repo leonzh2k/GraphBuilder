@@ -1,7 +1,7 @@
 //strat: keep context menus in dom but hidden, make them show up only when called
 export function createGraphAreaContextMenu() {
     var $graphAreaContextMenu =  $( "<div id='graph-area-background-context-menu' class='graph-area-context-menu'></div>" )
-    var $createNodeLabel =  $( "<span id='create-node-label' style='color:white; font-size:24px; border:2px red solid; cursor:pointer;' onclick='die()'>Create Node</span>" )
+    var $createNodeLabel =  $( "<span id='create-node-label' style='color:white; font-size:24px; border:2px red solid; cursor:pointer;'>Create Node</span>" )
     $createNodeLabel.appendTo($graphAreaContextMenu);
     $graphAreaContextMenu.appendTo( "#graph-area" );
     $graphAreaContextMenu.hide();

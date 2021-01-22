@@ -3,7 +3,7 @@
 }
 
 // html {
-//     height: 100%;
+//     height: 100%
 // }
 
 body {
@@ -11,10 +11,23 @@ body {
     // height: 100%;
 }
 
+#site-wrapper {
+    border: 2px orange solid;
+    display: flex;
+    flex-direction: row;
+    // flex-grow: 2;
+}
+
+
 #graph-area {
     border: 2px red solid;
     height: 750px;
-    width: 1250px;
+    width: 80%;
+}
+
+#control-panel {
+    height: 750px;
+    width: 20%;
 }
 
 .graph-area-context-menu {
@@ -30,3 +43,4 @@ body {
     // transform: translatee("10000");
     // transform: translate(100px, 200px);
 }
+
