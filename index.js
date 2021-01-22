@@ -1,15 +1,20 @@
 import {createNode, makeNodeDraggable} from "./modules/createNode.js"
 import {createGraphAreaContextMenu, createNodeContextMenu, showGraphAreaContextMenu, showNodeContextMenu, hideContextMenus} from "./modules/contextMenu.js"
-// import {createGraphAreaBackground} from './modules/createGraphAreaBackground.js'
+import {createGraphAreaBackground} from './modules/createGraphAreaBackground.js'
 
 jQuery(() => {
     var nodeList = [];
     //initialize context menus. They are hidden until called.
-    var $graphAreaContextMenu = createGraphAreaContextMenu();
-    var $nodeContextMenu = createNodeContextMenu();
     var $graphArea = $("#graph-area");
-    //shows context menu
-    $graphArea.on('mousedown', (e) => {
+    //an invisible background, right clicks on here enable the non-node context menu.
+    //because I want separate context menus when clicking on a node vs non-node
+    var $graphAreaBackground = createGraphAreaBackground();
+    var $graphAreaContextMenu = createGraphAreaContextMenu();
+    $graphAreaBackground.appendTo($graphArea);
+    var $nodeContextMenu = createNodeContextMenu();
+
+    //need to not show this if click on 
+    $graphAreaBackground.on('mousedown', (e) => {
         if (e.button == 2) {
             hideContextMenus(); //hides any context menus that might still be up
             console.log("right clicked on background")
@@ -23,10 +28,19 @@ jQuery(() => {
     $("#create-node-label").on('mousedown', (e) => {
         console.log("node created")
         hideContextMenus();
-        let node = createNode(e.pageX, e.pageY);
-        node.appendTo($graphArea);
+        let $node = createNode(e.pageX, e.pageY);
+        $node.appendTo($graphArea);
+        //if this is called before it is appended the positioning is off
+        
+        $node.draggable({
+            cursor: "grab",
+            // obstacle: ".node",
+            // preventCollision: true,
+            containment: $graphArea
+        });
+
         //add context menu when right click on node
-        node.mouseup((e) => {
+        $node.on('mouseup', (e) => {
             hideContextMenus();
             if (e.button == 2) {
                 console.log("right clicked on node")
@@ -34,7 +48,7 @@ jQuery(() => {
             }
         })
         //add node to list
-        nodeList.push(node);
+        nodeList.push($node);
         
     })
     //
