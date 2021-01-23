@@ -18,11 +18,17 @@ export function createGraphAreaContextMenu() {
 }
 
 export function createNodeContextMenu() {
-    var $nodeContextMenu =  $( "<div id='node-context-menu' class='graph-area-context-menu'></div>" )
-    var $deleteNodeLabel =  $( "<span id='deleteNodeLabel' style='color:white; font-size:18px; cursor:pointer;'>Delete Node</span>" )
-    var $renameNodeLabel =  $( "<span id='renameNodeLabel' style='color:white; font-size:18px; cursor:pointer;'>Rename Node</span>" )
-    $deleteNodeLabel.appendTo($nodeContextMenu);
-    $renameNodeLabel.appendTo($nodeContextMenu);
+    var $nodeContextMenu =  $( 
+        `
+            <div id='node-context-menu' class='graph-area-context-menu'>
+                <img id='rename-node-label' height=25px width=25px src="../images/pencil-svgrepo-com.svg" style='color:white; font-size:18px; cursor:pointer;'/>
+                <img id='delete-node-label' height=25px width=25px src="../images/trash-bin-svgrepo-com.svg" style='color:white; font-size:18px; cursor:pointer;'/>
+                
+            </div>
+        ` 
+    )
+    // $deleteNodeLabel.appendTo($nodeContextMenu);
+    // $renameNodeLabel.appendTo($nodeContextMenu);
     $nodeContextMenu.appendTo( "#graph-area" );
     $nodeContextMenu.hide();
     // $contextMenu.css('top', mouseY);
@@ -31,8 +37,8 @@ export function createNodeContextMenu() {
 }
 
 export function showGraphAreaContextMenu($graphAreaContextMenu, mouseX, mouseY) {
-    $graphAreaContextMenu.css('top', mouseY);
-    $graphAreaContextMenu.css('left', mouseX);
+    $graphAreaContextMenu.css('top', mouseY - 25);
+    $graphAreaContextMenu.css('left', mouseX - 25);
     $graphAreaContextMenu.show();
     return $graphAreaContextMenu;
 }

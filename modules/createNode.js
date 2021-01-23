@@ -1,5 +1,8 @@
-export function createNode(mouseX, mouseY) {
-    var $node = $("<div>A</div>");
+export function createNode(nodeName, mouseX, mouseY) {
+    var $node = $("<div></div>");
+    $node.html(nodeName);
+    $node.data("id", nodeName); //give the node an id for graph algos
+    console.log("this node's id: ", $node.data("id"));
     $node.addClass('node');
     //disables drag if you try to drag node with right click. drag is reenabled when you mouse up.
     // $node.on('mousedown',(e) => {

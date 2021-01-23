@@ -31,7 +31,7 @@ body {
     background-color: gray;
 }
 
-.graph-area-context-menu {
+#graph-area-background-context-menu {
     position: absolute;
     height: 60px;
     width: 60px;
@@ -43,7 +43,20 @@ body {
     z-index: 1;
 }
 
+#node-context-menu {
+    position: absolute;
+    height: 50px;
+    width: 80px;
+    background-color: rgb(49, 49, 49);
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    z-index: 1;
+}
+
 .node {
+    font-weight: bold;
     position: absolute;
     background-color: yellow;
     height: 50px;
@@ -60,4 +73,28 @@ body {
 #control-panel {
     height: 750px;
     width: 20%;
+}
+
+#name-node-menu {
+    position: absolute;
+    height: 50px;
+    width: 200px;
+    background-color: rgb(68, 68, 68);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    z-index: 2;
+}
+
+#rename-node-menu {
+    position: absolute;
+    height: 50px;
+    width: 200px;
+    background-color: rgb(68, 68, 68);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    z-index: 2;
 }
