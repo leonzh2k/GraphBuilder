@@ -4,7 +4,7 @@ export function createGraphAreaContextMenu() {
     var $createNodeLabel =  $( 
         `
             <div id='create-node-label' style='color:white; font-size:24px; cursor:pointer;'>
-                <img src='../images/plus-svgrepo-com.svg' height=50px width=50px />
+                <img src='https://www.svgrepo.com/show/157858/plus.svg' height=50px width=50px />
             </div>" 
         `
     )
@@ -21,8 +21,8 @@ export function createNodeContextMenu() {
     var $nodeContextMenu =  $( 
         `
             <div id='node-context-menu' class='graph-area-context-menu'>
-                <img id='rename-node-label' height=25px width=25px src="../images/pencil-svgrepo-com.svg" style='color:white; font-size:18px; cursor:pointer;'/>
-                <img id='delete-node-label' height=25px width=25px src="../images/trash-bin-svgrepo-com.svg" style='color:white; font-size:18px; cursor:pointer;'/>
+                <img id='rename-node-label' height=25px width=25px src="https://www.svgrepo.com/show/24909/pencil.svg" style='color:white; font-size:18px; cursor:pointer;'/>
+                <img id='delete-node-label' height=25px width=25px src="https://www.svgrepo.com/show/186288/trash-bin.svg" style='color:white; font-size:18px; cursor:pointer;'/>
                 
             </div>
         ` 
