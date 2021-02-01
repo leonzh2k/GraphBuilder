@@ -5,6 +5,7 @@ import {createNameNodeMenu, showNameNodeMenu, hideNameNodeMenu} from './modules/
 import { createRenameNodeMenu, showRenameNodeMenu, hideRenameNodeMenu  } from "./modules/renameNodeMenu.js"
 import { moveEdge } from "./modules/moveEdge.js";
 import { createEdge } from "./modules/createEdge.js"
+// import { join } from "path"
 
 jQuery(() => {
     var nodeList = [];
@@ -71,16 +72,21 @@ jQuery(() => {
             //if this is called before it is appended the positioning is off
             $node.draggable({
                 cursor: "grab",
-                // obstacle: ".node",
-                // preventCollision: true,
                 containment: $graphArea,
-                //move any edges here
+                //start and stop just applies border color to signify moving node
+                start: function() {
+                    $node.addClass("moving-node");
+                },
+                //move all neighbor edges here
                 drag: function() {
                     console.log("dragging")
                     //moves all edges connected to node.
                     $node.data("neighbors").forEach((neighbor) => {
                         moveEdge($node, neighbor.neighbor, neighbor.edge);
                     })
+                },
+                stop: function() {
+                    $node.removeClass("moving-node");
                 },
             });
 
@@ -142,6 +148,12 @@ jQuery(() => {
                     //this will automatically update neighbors in adj list since these are references
                     //create an edge
                     let $edge = createEdge($node1, $node2);
+
+                    // $edge.on("mousein", (e) => {
+                    //     $edge.css("background", "orange")
+                    // }).on("mouseout", (e) => {
+                    //     $edge.css("background", "black")
+                    // })
                     $node1.data("neighbors").push({
                         neighbor: $node2,
                         edge: $edge
@@ -194,11 +206,23 @@ jQuery(() => {
             $activeNode.html(newName);
             $activeNode.data("id", newName);
             //ALSO NEED TO RENAME OTHER INSTANCES OF NODE Like in other lists?
+            //probably not since it is a reference
 
         }
     })
     $("#delete-node-label").click(function deleteNode(e) {
         //need to remove all references to node (like in other node's adj lists)
+        //also need to remove all edges connected to node
+        for (let i = 0; i < nodeList.length; i++) {
+            for (let j = 0; j < nodeList[i].data("neighbors").length; j++) {
+                // let neighbor = nodeList[i].data("neighbors")[j];
+                if (nodeList[i].data("neighbors")[j].neighbor == $activeNode) {
+                    console.log("node found");
+                    nodeList[i].data("neighbors")[j].edge.remove(); //deletes edge associated with neighbor
+                    nodeList[i].data("neighbors").filter((j) => j.neighbor != $activeNode);
+                }
+            }
+        }
         nodeList = nodeList.filter(node => node != $activeNode);
         $activeNode.remove();
         hideContextMenus();

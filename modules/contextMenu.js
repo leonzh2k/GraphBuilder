@@ -36,6 +36,30 @@ export function createNodeContextMenu() {
     return $nodeContextMenu;
 }
 
+export function createEdgeContextMenu() {
+    var $edgeContextMenu =  $( 
+        `
+            <div id='edge-context-menu' class='graph-area-context-menu'>
+                <img id='delete-edge-label' height=25px width=25px src="https://www.svgrepo.com/show/186288/trash-bin.svg" style='color:white; font-size:18px; cursor:pointer;'/>
+            </div>
+        ` 
+    )
+    // $deleteNodeLabel.appendTo($nodeContextMenu);
+    // $renameNodeLabel.appendTo($nodeContextMenu);
+    $edgeContextMenu.appendTo( "#graph-area" );
+    $edgeContextMenu.hide();
+    // $contextMenu.css('top', mouseY);
+    // $contextMenu.css('left', mouseX);
+    return $edgeContextMenu;
+}
+
+// export function showNodeContextMenu($edgeContextMenu, mouseX, mouseY) {
+//     $edgeContextMenu.css('top', mouseY);
+//     $edgeContextMenu.css('left', mouseX);
+//     $edgeContextMenu.show();
+//     return $edgeContextMenu;
+// }
+
 export function showGraphAreaContextMenu($graphAreaContextMenu, mouseX, mouseY) {
     $graphAreaContextMenu.css('top', mouseY - 25);
     $graphAreaContextMenu.css('left', mouseX - 25);
