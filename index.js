@@ -75,6 +75,26 @@ jQuery(() => {
                 //move any edges here
                 drag: function() {
                     console.log("dragging")
+                    //moves all edges connected to node.
+                    $node.data("neighbors").forEach((neighbor) => {
+                        let x1 = parseInt($node.css("left")) + 25;
+                        let y1 = parseInt($node.css("top")) + 25;
+                        let x2 = parseInt(neighbor.neighbor.css("left")) + 25;
+                        let y2 = parseInt(neighbor.neighbor.css("top")) + 25;
+                        var length = Math.sqrt((x1-x2)*(x1-x2) + (y1-y2)*(y1-y2));
+                        //console.log("length is %d", length);
+                        var angle = Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI;
+                        //console.log("angle is %d", angle);
+                        var transform = 'rotate('+ angle +'deg)';
+                        neighbor.edge
+                            .css("transform", transform)
+                            .css("width", length.toString() + 'px')
+                            .css("left", x1.toString() + 'px')
+                            .css("top", y1.toString() + 'px')
+
+
+
+                    })
                 },
             });
 
@@ -92,14 +112,14 @@ jQuery(() => {
                     showNodeContextMenu($nodeContextMenu, e.pageX, e.pageY);
                 }
             })
-            $node.on('moving', (e) => {
-                console.log('moving');
-            })
+            // $node.on('moving', (e) => {
+            //     console.log('moving');
+            // })
             //double click to focus on node
             $node.dblclick(function focusOnNode(e) {
                 console.log("node dbl click");
                 $node.addClass("focused-node")
-                //check that you did not select the same node
+                //check that you did not select the same node twice
                 if (lockedNodes[0] == $node) {
                     console.log("clicked the same node")
                     lockedNodes[0].removeClass("focused-node")
@@ -145,11 +165,24 @@ jQuery(() => {
                         neighbor: $node1,
                         edge: $edge
                     })
+                    //edge geometry
+                    let x1 = parseInt($node1.css("left")) + 25;
+                    let y1 = parseInt($node1.css("top")) + 25;
+                    let x2 = parseInt($node2.css("left")) + 25;
+                    let y2 = parseInt($node2.css("top")) + 25;
+                    var length = Math.sqrt((x1-x2)*(x1-x2) + (y1-y2)*(y1-y2));
+                    //console.log("length is %d", length);
+                    var angle = Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI;
+                    //console.log("angle is %d", angle);
+                    var transform = 'rotate('+ angle +'deg)';
+                    
+                    $edge
+                        .css("transform", transform)
+                        .css("width", length.toString() + 'px')
+                        .css("left", x1.toString() + 'px')
+                        .css("top", y1.toString() + 'px');
 
                     $edge.appendTo($graphArea);
-                    $edge.css('left', e.pageX);
-                    $edge.css('top', e.pageY);
-
                     $node1.removeClass("focused-node")
                     $node2.removeClass("focused-node")
                     lockedNodes = [];
@@ -229,3 +262,20 @@ jQuery(() => {
     //     })
     // })
 })
+
+// function moveEdge(startNode, endNode, edge) {
+//     let x1 = parseInt(startNode.style.left) + 25;
+//     let y1 = parseInt(startNode.style.top) + 25;
+//     let x2 = parseInt(endNode.style.left) + 25;
+//     let y2 = parseInt(endNode.style.top) + 25;
+//     var length = Math.sqrt((x1-x2)*(x1-x2) + (y1-y2)*(y1-y2));
+//     //console.log("length is %d", length);
+//     var angle = Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI;
+//     //console.log("angle is %d", angle);
+//     var transform = 'rotate('+ angle +'deg)';
+//     //edge.id = ""
+//     edge.style.transform = transform;
+//     edge.style.width = length.toString() + 'px';
+//     edge.style.left = x1.toString() + 'px';
+//     edge.style.top = y1.toString() + 'px';
+//   }
