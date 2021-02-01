@@ -62,9 +62,19 @@ body {
   align-items: center;
 }
 
+.edge {
+  border-left: 6px solid black;
+  height: 10px;
+  position: absolute;
+}
+
 #control-panel {
   height: 750px;
   width: 20%;
+}
+
+.focused-node {
+  border: 2px green solid;
 }
 
 #name-node-menu {

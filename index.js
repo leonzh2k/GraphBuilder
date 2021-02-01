@@ -52,6 +52,7 @@ jQuery(() => {
         let nodeName = String($("#node-name").val());
         if (nodeName.length <= 0 || nodeName.length > 3) {
             alert("node name must be between 1 and 3 chars long")
+            return;
         }
         else {
             //check if all other nodes have different names
@@ -70,7 +71,11 @@ jQuery(() => {
                 cursor: "grab",
                 // obstacle: ".node",
                 // preventCollision: true,
-                containment: $graphArea
+                containment: $graphArea,
+                //move any edges here
+                drag: function() {
+                    console.log("dragging")
+                },
             });
 
             //add context menu when right click on node
@@ -87,10 +92,69 @@ jQuery(() => {
                     showNodeContextMenu($nodeContextMenu, e.pageX, e.pageY);
                 }
             })
-            $node.on('dblclick', (e) => {
+            $node.on('moving', (e) => {
+                console.log('moving');
+            })
+            //double click to focus on node
+            $node.dblclick(function focusOnNode(e) {
                 console.log("node dbl click");
-                $node.css("border", "3px red solid");
+                $node.addClass("focused-node")
+                //check that you did not select the same node
+                if (lockedNodes[0] == $node) {
+                    console.log("clicked the same node")
+                    lockedNodes[0].removeClass("focused-node")
+                    lockedNodes = [];
+                    return;
+                }
                 lockedNodes.push($node);
+                console.log("lockedNodes", lockedNodes) 
+                //two focused nodes create an edge.
+                if (lockedNodes.length == 2) {
+                    let $node1 = lockedNodes[0]
+                    let $node2 = lockedNodes[1]
+                    //check if nodes are already connected
+                    for (let i = 0; i < $node1.data("neighbors").length; i++) {
+                        // console.log("hello", i.neighbor);
+                        if ($node1.data("neighbors")[i].neighbor == $node2) {
+                            console.log("edge already exists!")
+                            $node1.removeClass("focused-node")
+                            $node2.removeClass("focused-node")
+                            lockedNodes = [];
+                            return;
+                        }
+                    }
+                    for (let i = 0; i < $node2.data("neighbors").length; i++) {
+                        console.log(i.neighbor);
+                        if ($node2.data("neighbors")[i].neighbor == $node1) {
+                            console.log("edge already exists!")
+                            $node1.removeClass("focused-node")
+                            $node2.removeClass("focused-node")
+                            lockedNodes = [];
+                            return;
+                        }
+                    }
+                    //this will automatically update neighbors in adj list since these are references
+                    //create an edge
+                    var $edge = $("<div></div>");
+                    $edge.addClass("edge");
+                    $node1.data("neighbors").push({
+                        neighbor: $node2,
+                        edge: $edge
+                    })
+                    $node2.data("neighbors").push({
+                        neighbor: $node1,
+                        edge: $edge
+                    })
+
+                    $edge.appendTo($graphArea);
+                    $edge.css('left', e.pageX);
+                    $edge.css('top', e.pageY);
+
+                    $node1.removeClass("focused-node")
+                    $node2.removeClass("focused-node")
+                    lockedNodes = [];
+                    // console.log($node1.data("neighbors"));
+                }
             })
             //add node to list
             nodeList.push($node);
@@ -104,7 +168,7 @@ jQuery(() => {
     })
 
     //handles actual node rename logic
-    $("#rename-node-button").on('click', (e) => {
+    $("#rename-node-button").click(function renameNode(e) {
         let newName = String($("#node-rename").val());
         //check length
         if (newName.length <= 0 || newName.length > 3) {
@@ -127,10 +191,12 @@ jQuery(() => {
             hideRenameNodeMenu($renameNodeMenu);
             $activeNode.html(newName);
             $activeNode.data("id", newName);
+            //ALSO NEED TO RENAME OTHER INSTANCES OF NODE Like in other lists?
 
         }
     })
-    $("#delete-node-label").on('click', (e) => {
+    $("#delete-node-label").click(function deleteNode(e) {
+        //need to remove all references to node (like in other node's adj lists)
         nodeList = nodeList.filter(node => node != $activeNode);
         $activeNode.remove();
         hideContextMenus();
@@ -141,12 +207,12 @@ jQuery(() => {
     //enables draggability for all nodes when you mouse up. This is for when 
     //draggability was removed from node when you right clicked, but you need to add
     //draggability again after you stop right clicking.
-    $("html").on('mouseup', () => {
-        nodeList.forEach((node) => {
-            makeNodeDraggable(node);
-            // console.log('nodes draggable again')
-        })
-    })
+    // $("html").on('mouseup', () => {
+    //     nodeList.forEach((node) => {
+    //         makeNodeDraggable(node);
+    //         // console.log('nodes draggable again')
+    //     })
+    // })
 
     // $("#delete-node-label").on('click', (e) => {
     //     console.log("node deleted")
