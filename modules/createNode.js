@@ -3,7 +3,7 @@ export function createNode(nodeName, mouseX, mouseY) {
     $node.html(nodeName);
     $node.data("id", nodeName); //give the node an id for graph algos
     $node.data("neighbors", []); //since I am dealing with undirected graphs for now, don't need to worry about indegree, outdegre,, etc.
-    console.log("this node's id: ", $node.data("id"));
+    // console.log("this node's id: ", $node.data("id"));
     $node.addClass('node');
     //disables drag if you try to drag node with right click. drag is reenabled when you mouse up.
     // $node.on('mousedown',(e) => {

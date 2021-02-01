@@ -44,21 +44,17 @@ export function createEdgeContextMenu() {
             </div>
         ` 
     )
-    // $deleteNodeLabel.appendTo($nodeContextMenu);
-    // $renameNodeLabel.appendTo($nodeContextMenu);
     $edgeContextMenu.appendTo( "#graph-area" );
     $edgeContextMenu.hide();
-    // $contextMenu.css('top', mouseY);
-    // $contextMenu.css('left', mouseX);
     return $edgeContextMenu;
 }
 
-// export function showNodeContextMenu($edgeContextMenu, mouseX, mouseY) {
-//     $edgeContextMenu.css('top', mouseY);
-//     $edgeContextMenu.css('left', mouseX);
-//     $edgeContextMenu.show();
-//     return $edgeContextMenu;
-// }
+export function showEdgeContextMenu($edgeContextMenu, mouseX, mouseY) {
+    $edgeContextMenu.css('top', mouseY);
+    $edgeContextMenu.css('left', mouseX);
+    $edgeContextMenu.show();
+    return $edgeContextMenu;
+}
 
 export function showGraphAreaContextMenu($graphAreaContextMenu, mouseX, mouseY) {
     $graphAreaContextMenu.css('top', mouseY - 25);

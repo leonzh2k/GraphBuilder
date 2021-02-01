@@ -48,7 +48,20 @@ body {
   z-index: 3;
 }
 
+#edge-context-menu {
+  position: absolute;
+  height: 50px;
+  width: 50px;
+  background-color: #313131;
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  z-index: 3;
+}
+
 .node {
+  /* cursor: pointer; */
   font-weight: bold;
   position: absolute;
   background-color: yellow;

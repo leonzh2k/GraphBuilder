@@ -1,27 +1,29 @@
 import {createNode, makeNodeDraggable} from "./modules/createNode.js"
-import {createGraphAreaContextMenu, createNodeContextMenu, showGraphAreaContextMenu, showNodeContextMenu, hideContextMenus} from "./modules/contextMenu.js"
+import {createGraphAreaContextMenu, createNodeContextMenu, showGraphAreaContextMenu, showNodeContextMenu, createEdgeContextMenu, showEdgeContextMenu, hideContextMenus} from "./modules/contextMenu.js"
 import {createGraphAreaBackground} from './modules/createGraphAreaBackground.js'
 import {createNameNodeMenu, showNameNodeMenu, hideNameNodeMenu} from './modules/nameNodeMenu.js'
 import { createRenameNodeMenu, showRenameNodeMenu, hideRenameNodeMenu  } from "./modules/renameNodeMenu.js"
 import { moveEdge } from "./modules/moveEdge.js";
 import { createEdge } from "./modules/createEdge.js"
+import { printAdjList } from "./modules/printAdjList.js"
 // import { join } from "path"
 
 jQuery(() => {
     var nodeList = [];
     var lockedNodes = [];
     var $activeNode; //lets us tell what node we should be performing actions on (e.g. renaming, deleting)
+    var $activeEdge; //lets us tell what edge we should be performing actions on (e.g. renaming, deleting)
     //initialize context menus. They are hidden until called.
     var $graphArea = $("#graph-area");
     //an invisible background, right clicks on here enable the non-node context menu.
     //because I want separate context menus when clicking on a node vs non-node
     var $graphAreaBackground = createGraphAreaBackground();
+    $graphAreaBackground.appendTo($graphArea);
     var $graphAreaContextMenu = createGraphAreaContextMenu();
     var $nameNodeMenu = createNameNodeMenu();
     var $renameNodeMenu = createRenameNodeMenu();
-    $graphAreaBackground.appendTo($graphArea);
     var $nodeContextMenu = createNodeContextMenu();
-
+    var $edgeContextMenu = createEdgeContextMenu();
     //need to not show this if click on 
     $graphAreaBackground.on('mousedown', (e) => {
         if (e.button == 2) {
@@ -32,7 +34,7 @@ jQuery(() => {
             //resets the value in the node name input.
             $("#node-name").val(null);
             $("#node-rename").val(null);
-            console.log("right clicked on background")
+            // console.log("right clicked on background")
             showGraphAreaContextMenu($graphAreaContextMenu, e.pageX, e.pageY);
         }
         else {
@@ -46,7 +48,7 @@ jQuery(() => {
     })
     //when click on context menu show create node option.
     $("#create-node-label").on('mousedown', (e) => {
-        console.log("node created")
+        // console.log("node created")
         showNameNodeMenu($nameNodeMenu, e.pageX, e.pageY);
         hideContextMenus();
     })
@@ -79,7 +81,7 @@ jQuery(() => {
                 },
                 //move all neighbor edges here
                 drag: function() {
-                    console.log("dragging")
+                    // console.log("dragging")
                     //moves all edges connected to node.
                     $node.data("neighbors").forEach((neighbor) => {
                         moveEdge($node, neighbor.neighbor, neighbor.edge);
@@ -148,12 +150,27 @@ jQuery(() => {
                     //this will automatically update neighbors in adj list since these are references
                     //create an edge
                     let $edge = createEdge($node1, $node2);
+                    
+                    //add event listenerse
+                    $edge.on("mouseenter", (e) => {
+                        $edge.css("background", "orange")
+                    }).on("mouseleave", (e) => {
+                        $edge.css("background", "black")
+                    }).on("mousedown", (e) => {
+                        if (e.button == 2) {
+                            $activeEdge = $edge;
+                            hideContextMenus(); //hides any context menus that might still be up
+                            // //hides the node name input
+                            // $nameNodeMenu.hide();
+                            // $renameNodeMenu.hide();
+                            // //resets the value in the node name input.
+                            // $("#node-name").val(null);
+                            // $("#node-rename").val(null);
+                            console.log("right clicked on edge")
+                            showEdgeContextMenu($edgeContextMenu, e.pageX, e.pageY);
+                        }
+                    })
 
-                    // $edge.on("mousein", (e) => {
-                    //     $edge.css("background", "orange")
-                    // }).on("mouseout", (e) => {
-                    //     $edge.css("background", "black")
-                    // })
                     $node1.data("neighbors").push({
                         neighbor: $node2,
                         edge: $edge
@@ -162,7 +179,7 @@ jQuery(() => {
                         neighbor: $node1,
                         edge: $edge
                     })
-
+                    printAdjList(nodeList);
                     $edge.appendTo($graphArea);
                     $node1.removeClass("focused-node")
                     $node2.removeClass("focused-node")
@@ -172,6 +189,7 @@ jQuery(() => {
             })
             //add node to list
             nodeList.push($node);
+            printAdjList(nodeList);
         }
     })
     //shows rename node input
@@ -207,6 +225,7 @@ jQuery(() => {
             $activeNode.data("id", newName);
             //ALSO NEED TO RENAME OTHER INSTANCES OF NODE Like in other lists?
             //probably not since it is a reference
+            printAdjList(nodeList);
 
         }
     })
@@ -217,18 +236,41 @@ jQuery(() => {
             for (let j = 0; j < nodeList[i].data("neighbors").length; j++) {
                 // let neighbor = nodeList[i].data("neighbors")[j];
                 if (nodeList[i].data("neighbors")[j].neighbor == $activeNode) {
-                    console.log("node found");
+
+                    // console.log("node found");
+                    // console.log("length of list before: ", nodeList[i].data("neighbors").length)
+
                     nodeList[i].data("neighbors")[j].edge.remove(); //deletes edge associated with neighbor
-                    nodeList[i].data("neighbors").filter((j) => j.neighbor != $activeNode);
+                    let filteredNodeList = nodeList[i].data("neighbors").filter((j) => j.neighbor != $activeNode); //removes neighbor/edge pair from adj list
+                    nodeList[i].data("neighbors", filteredNodeList)
+                    // console.log("length of list after: ", nodeList[i].data("neighbors").length)
+
                 }
             }
         }
         nodeList = nodeList.filter(node => node != $activeNode);
         $activeNode.remove();
         hideContextMenus();
-        console.log(nodeList);
+        printAdjList(nodeList);
     })
-
+    $("#delete-edge-label").click(function deleteEdge(e) {
+        console.log("edge deleted")
+        for (let i = 0; i < nodeList.length; i++) {
+            for (let j = 0; j < nodeList[i].data("neighbors").length; j++) {
+                // let neighbor = nodeList[i].data("neighbors")[j];
+                if (nodeList[i].data("neighbors")[j].edge == $activeEdge) {
+                    // console.log("edge found");
+                    // console.log("length of list before: ", nodeList[i].data("neighbors").length)
+                    let filteredNodeList = nodeList[i].data("neighbors").filter((j) => j.edge != $activeEdge); //removes neighbor/edge pair from adj list
+                    nodeList[i].data("neighbors", filteredNodeList);
+                    // console.log("length of list after: ", nodeList[i].data("neighbors").length)
+                } 
+            }
+        }
+        $activeEdge.remove();
+        hideContextMenus();
+        printAdjList(nodeList);
+    })
     //
     //enables draggability for all nodes when you mouse up. This is for when 
     //draggability was removed from node when you right clicked, but you need to add
