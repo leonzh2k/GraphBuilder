@@ -3,6 +3,8 @@ import {createGraphAreaContextMenu, createNodeContextMenu, showGraphAreaContextM
 import {createGraphAreaBackground} from './modules/createGraphAreaBackground.js'
 import {createNameNodeMenu, showNameNodeMenu, hideNameNodeMenu} from './modules/nameNodeMenu.js'
 import { createRenameNodeMenu, showRenameNodeMenu, hideRenameNodeMenu  } from "./modules/renameNodeMenu.js"
+import { moveEdge } from "./modules/moveEdge.js";
+import { createEdge } from "./modules/createEdge.js"
 
 jQuery(() => {
     var nodeList = [];
@@ -77,23 +79,7 @@ jQuery(() => {
                     console.log("dragging")
                     //moves all edges connected to node.
                     $node.data("neighbors").forEach((neighbor) => {
-                        let x1 = parseInt($node.css("left")) + 25;
-                        let y1 = parseInt($node.css("top")) + 25;
-                        let x2 = parseInt(neighbor.neighbor.css("left")) + 25;
-                        let y2 = parseInt(neighbor.neighbor.css("top")) + 25;
-                        var length = Math.sqrt((x1-x2)*(x1-x2) + (y1-y2)*(y1-y2));
-                        //console.log("length is %d", length);
-                        var angle = Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI;
-                        //console.log("angle is %d", angle);
-                        var transform = 'rotate('+ angle +'deg)';
-                        neighbor.edge
-                            .css("transform", transform)
-                            .css("width", length.toString() + 'px')
-                            .css("left", x1.toString() + 'px')
-                            .css("top", y1.toString() + 'px')
-
-
-
+                        moveEdge($node, neighbor.neighbor, neighbor.edge);
                     })
                 },
             });
@@ -155,8 +141,7 @@ jQuery(() => {
                     }
                     //this will automatically update neighbors in adj list since these are references
                     //create an edge
-                    var $edge = $("<div></div>");
-                    $edge.addClass("edge");
+                    let $edge = createEdge($node1, $node2);
                     $node1.data("neighbors").push({
                         neighbor: $node2,
                         edge: $edge
@@ -165,22 +150,6 @@ jQuery(() => {
                         neighbor: $node1,
                         edge: $edge
                     })
-                    //edge geometry
-                    let x1 = parseInt($node1.css("left")) + 25;
-                    let y1 = parseInt($node1.css("top")) + 25;
-                    let x2 = parseInt($node2.css("left")) + 25;
-                    let y2 = parseInt($node2.css("top")) + 25;
-                    var length = Math.sqrt((x1-x2)*(x1-x2) + (y1-y2)*(y1-y2));
-                    //console.log("length is %d", length);
-                    var angle = Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI;
-                    //console.log("angle is %d", angle);
-                    var transform = 'rotate('+ angle +'deg)';
-                    
-                    $edge
-                        .css("transform", transform)
-                        .css("width", length.toString() + 'px')
-                        .css("left", x1.toString() + 'px')
-                        .css("top", y1.toString() + 'px');
 
                     $edge.appendTo($graphArea);
                     $node1.removeClass("focused-node")
