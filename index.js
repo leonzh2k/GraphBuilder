@@ -6,6 +6,7 @@ import { createRenameNodeMenu, showRenameNodeMenu, hideRenameNodeMenu  } from ".
 import { moveEdge } from "./modules/moveEdge.js";
 import { createEdge } from "./modules/createEdge.js"
 import { printAdjList } from "./modules/printAdjList.js"
+import {BFS} from "./modules/algorithms/BFS.js"
 // import { join } from "path"
 
 jQuery(() => {
@@ -270,6 +271,10 @@ jQuery(() => {
         $activeEdge.remove();
         hideContextMenus();
         printAdjList(nodeList);
+    })
+
+    $("#run-bfs-button").click(() => {
+        BFS(nodeList, nodeList[0])
     })
     //
     //enables draggability for all nodes when you mouse up. This is for when 

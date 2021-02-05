@@ -67,7 +67,7 @@ body {
   background-color: yellow;
   height: 50px;
   width: 50px;
-  border: 2px black solid;
+  border: 3px black solid;
   border-radius: 25px;
   z-index: 1;
   display: flex;
@@ -90,11 +90,11 @@ body {
 }
 
 .focused-node {
-  border: 2px red solid;
+  border: 3px red solid;
 }
 
 .moving-node {
-  border: 2px green solid;
+  border: 3px green solid;
 }
 
 #name-node-menu {
@@ -108,6 +108,8 @@ body {
   border-radius: 10px;
   z-index: 2;
 }
+
+
 
 #rename-node-menu {
   position: absolute;
