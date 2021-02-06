@@ -75,6 +75,14 @@ body {
   align-items: center;
 }
 
+.visited-node {
+  border: 3px blue solid;
+}
+
+.discovered-node {
+  border: 3px green solid;
+}
+
 .edge {
   border-left: 6px solid black;
   position: absolute;

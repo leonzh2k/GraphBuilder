@@ -5,11 +5,11 @@ export function BFS(nodeList, $root) {
     let queue = [];
     nodeList.forEach(node => {
         console.log("id: ", node.data("id"))
-        node.css("border-color", "black")
+        // node.css("border-color", "black")
         node.data("discovered", false);
     })
     $root.data("discovered", true);
-    $root.css("border-color", "green")
+    $root.addClass("visited-node")
     queue.push($root)
     visitOrder.push($root.data("id"))
     let delay = 0;
@@ -19,12 +19,13 @@ export function BFS(nodeList, $root) {
         if (delay != nodeList.length * 1000) {
             setTimeout(() => {
                 let $currNode = queue.shift();
-                $currNode.css("border-color", "blue")
+                $currNode.removeClass("discovered-node")
+                $currNode.addClass("visited-node")
                 console.log("current node: ", $currNode.data("id"))
                 $currNode.data("neighbors").forEach((node) => {
                     if (node.neighbor.data("discovered") == false) {
                         node.neighbor.data("discovered", true);
-                        node.neighbor.css("border-color", "green")
+                        node.neighbor.addClass("discovered-node")
                         // node.edge.css("background", "orange")
                         queue.push(node.neighbor)
                         visitOrder.push(node.neighbor.data("id"))
@@ -50,7 +51,8 @@ export function BFS(nodeList, $root) {
     //resets all node's colors
     setTimeout(() => {
         nodeList.forEach(node => {
-            node.css("border-color", "black");
+            node.removeClass("visited-node")
+            node.removeClass("discovered-node")
             node.removeData("discovered");
 
         })
@@ -61,8 +63,6 @@ export function BFS(nodeList, $root) {
         })
         console.log("Visit Order: ", visitOrderStr)
     }, ((nodeList.length + 1) * 1000))
-
-   
 
 }
 
