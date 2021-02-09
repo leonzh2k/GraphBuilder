@@ -1,27 +1,49 @@
+/* sass --watch index.scss index.css */
 * {
     box-sizing: border-box;
 }
 
-// html {
-//     height: 100%
-// }
+html {
+    height: 100%;
+    width: 100%;
+}
 
 body {
-    background-color: rgb(128, 128, 128);
-    // height: 100%;
+    background-color: gray;
+    height: 100%;
+    width: 100%;
+    margin: 0 auto;
 }
 
-#site-wrapper {
-    border: 2px orange solid;
+#site-header {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-size: 24px;
+    color: white;
+    background-color: black;
+    height: 30px;
+    display: flex;
+    // justify-content: center;
+    align-items: center;
+    padding-left: 20px;
+}
+
+#site-body-wrapper {
+    // border: 2px orange solid;
     display: flex;
     flex-direction: row;
-    // flex-grow: 2;
+}
+$site-body-section-widths: 765px;
+
+#graph-control-panel {
+    color: white;
+    height: $site-body-section-widths;
+    width: 20%;
+    background-color: rgb(63, 63, 63);
 }
 
-
 #graph-area {
-    border: 2px red solid;
-    height: 750px;
+    // border: 2px red solid;
+    height: $site-body-section-widths;
     width: 80%;
 }
 
@@ -31,70 +53,127 @@ body {
     background-color: gray;
 }
 
+/* CONTEXT MENUS */
+
+/* GRAPH CONTEXT MENU */
+
 #graph-area-background-context-menu {
     position: absolute;
-    height: 60px;
-    width: 60px;
-    background-color: rgb(49, 49, 49);
+    height: 50px;
+    width: 50px;
+    background-color: #313131;
     border-radius: 10px;
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 1;
+    z-index: 4;
 }
+
+#add-node-image {
+    margin-top: 4.7px;
+}
+/* NODE CONTEXT MENU */
 
 #node-context-menu {
     position: absolute;
     height: 50px;
     width: 80px;
-    background-color: rgb(49, 49, 49);
+    background-color: #313131;
     border-radius: 10px;
     display: flex;
     justify-content: space-evenly;
     align-items: center;
-    z-index: 1;
+    z-index: 3;
 }
 
+#name-node-menu {
+position: absolute;
+height: 50px;
+width: 200px;
+background-color: #444444;
+display: flex;
+justify-content: center;
+align-items: center;
+border-radius: 10px;
+z-index: 2;
+}
+
+#rename-node-menu {
+position: absolute;
+height: 50px;
+width: 200px;
+background-color: #444444;
+display: flex;
+justify-content: center;
+align-items: center;
+border-radius: 10px;
+z-index: 2;
+}
+
+/* EDGE CONTEXT MENU */
+
+#edge-context-menu {
+position: absolute;
+height: 50px;
+width: 50px;
+background-color: #313131;
+border-radius: 10px;
+display: flex;
+justify-content: space-evenly;
+align-items: center;
+z-index: 3;
+}
+
+/* NODE, EDGES */
+
+$node-border-width: 3.5px;
+
 .node {
+    /* cursor: pointer; */
     font-weight: bold;
     position: absolute;
     background-color: yellow;
     height: 50px;
     width: 50px;
-    border: 2px black solid;
+    border: $node-border-width black solid;
     border-radius: 25px;
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* NODE INTERACTIONS */
+
+.focused-node {
+    border: $node-border-width red solid;
+}
+
+.moving-node {
+    border: $node-border-width green solid;
+}
+
+.edge {
+    border-left: 6px solid black;
+    position: absolute;
+    transform-origin: 0 100%;
+    height: 3px; /* Line width of 3 */
+    background: #000; /* Black fill */
     z-index: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
 }
 
 
-#control-panel {
-    height: 750px;
-    width: 20%;
+/* ALGORHYTHM STYLES */
+
+.visited-node {
+    border: $node-border-width blue solid;
 }
 
-#name-node-menu {
-    position: absolute;
-    height: 50px;
-    width: 200px;
-    background-color: rgb(68, 68, 68);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 10px;
-    z-index: 2;
+.discovered-node {
+    border: $node-border-width green solid;
 }
 
-#rename-node-menu {
-    position: absolute;
-    height: 50px;
-    width: 200px;
-    background-color: rgb(68, 68, 68);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 10px;
-    z-index: 2;
-}
+
+
+
+  /*# sourceMappingURL=index.css.map */

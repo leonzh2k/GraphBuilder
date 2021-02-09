@@ -4,7 +4,7 @@ export function createGraphAreaContextMenu() {
     var $createNodeLabel =  $( 
         `
             <div id='create-node-label' style='color:white; font-size:24px; cursor:pointer;'>
-                <img src='https://www.svgrepo.com/show/157858/plus.svg' height=50px width=50px />
+                <img id='add-node-image' src='https://www.svgrepo.com/show/157858/plus.svg' height=40px width=40px />
             </div>" 
         `
     )

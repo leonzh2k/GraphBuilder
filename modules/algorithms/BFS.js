@@ -30,7 +30,6 @@ export function BFS(nodeList, $root) {
                         queue.push(node.neighbor)
                         visitOrder.push(node.neighbor.data("id"))
                     }
-                        
                 })
                 // $currNode.css("border-color", "green")
             }, delay)

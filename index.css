@@ -1,20 +1,45 @@
+/* sass --watch index.scss index.css */
 * {
   box-sizing: border-box;
 }
 
-body {
-  background-color: gray;
+html {
+  height: 100%;
+  width: 100%;
 }
 
-#site-wrapper {
-  border: 2px orange solid;
+body {
+  background-color: gray;
+  height: 100%;
+  width: 100%;
+  margin: 0 auto;
+}
+
+#site-header {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  font-size: 24px;
+  color: white;
+  background-color: black;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  padding-left: 20px;
+}
+
+#site-body-wrapper {
   display: flex;
   flex-direction: row;
 }
 
+#graph-control-panel {
+  color: white;
+  height: 765px;
+  width: 20%;
+  background-color: #3f3f3f;
+}
+
 #graph-area {
-  border: 2px red solid;
-  height: 750px;
+  height: 765px;
   width: 80%;
 }
 
@@ -24,10 +49,12 @@ body {
   background-color: gray;
 }
 
+/* CONTEXT MENUS */
+/* GRAPH CONTEXT MENU */
 #graph-area-background-context-menu {
   position: absolute;
-  height: 60px;
-  width: 60px;
+  height: 50px;
+  width: 50px;
   background-color: #313131;
   border-radius: 10px;
   display: flex;
@@ -36,6 +63,11 @@ body {
   z-index: 4;
 }
 
+#add-node-image {
+  margin-top: 4.7px;
+}
+
+/* NODE CONTEXT MENU */
 #node-context-menu {
   position: absolute;
   height: 50px;
@@ -46,63 +78,6 @@ body {
   justify-content: space-evenly;
   align-items: center;
   z-index: 3;
-}
-
-#edge-context-menu {
-  position: absolute;
-  height: 50px;
-  width: 50px;
-  background-color: #313131;
-  border-radius: 10px;
-  display: flex;
-  justify-content: space-evenly;
-  align-items: center;
-  z-index: 3;
-}
-
-.node {
-  /* cursor: pointer; */
-  font-weight: bold;
-  position: absolute;
-  background-color: yellow;
-  height: 50px;
-  width: 50px;
-  border: 3px black solid;
-  border-radius: 25px;
-  z-index: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.visited-node {
-  border: 3px blue solid;
-}
-
-.discovered-node {
-  border: 3px green solid;
-}
-
-.edge {
-  border-left: 6px solid black;
-  position: absolute;
-  transform-origin: 0 100%;
-  height: 3px; /* Line width of 3 */
-  background: #000; /* Black fill */
-  z-index: 0;
-}
-
-#control-panel {
-  height: 750px;
-  width: 20%;
-}
-
-.focused-node {
-  border: 3px red solid;
-}
-
-.moving-node {
-  border: 3px green solid;
 }
 
 #name-node-menu {
@@ -117,8 +92,6 @@ body {
   z-index: 2;
 }
 
-
-
 #rename-node-menu {
   position: absolute;
   height: 50px;
@@ -130,5 +103,65 @@ body {
   border-radius: 10px;
   z-index: 2;
 }
+
+/* EDGE CONTEXT MENU */
+#edge-context-menu {
+  position: absolute;
+  height: 50px;
+  width: 50px;
+  background-color: #313131;
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  z-index: 3;
+}
+
+/* NODE, EDGES */
+.node {
+  /* cursor: pointer; */
+  font-weight: bold;
+  position: absolute;
+  background-color: yellow;
+  height: 50px;
+  width: 50px;
+  border: 3.5px black solid;
+  border-radius: 25px;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* NODE INTERACTIONS */
+.focused-node {
+  border: 3.5px red solid;
+}
+
+.moving-node {
+  border: 3.5px green solid;
+}
+
+.edge {
+  border-left: 6px solid black;
+  position: absolute;
+  transform-origin: 0 100%;
+  height: 3px;
+  /* Line width of 3 */
+  background: #000;
+  /* Black fill */
+  z-index: 0;
+}
+
+/* ALGORHYTHM STYLES */
+.visited-node {
+  border: 3.5px blue solid;
+}
+
+.discovered-node {
+  border: 3.5px green solid;
+}
+
+/*# sourceMappingURL=index.css.map */
 
 /*# sourceMappingURL=index.css.map */
