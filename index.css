@@ -162,6 +162,17 @@ body {
   border: 3.5px green solid;
 }
 
+table, th,
+td {
+  border: 1px solid white;
+}
+
+thead,
+tfoot {
+  background-color: #333;
+  color: #fff;
+}
+
 /*# sourceMappingURL=index.css.map */
 
 /*# sourceMappingURL=index.css.map */

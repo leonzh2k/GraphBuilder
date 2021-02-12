@@ -1,4 +1,8 @@
 export function BFS(nodeList, $root) {
+    //remove any existing viz features
+    $(".bfs-viz-feature").remove();
+    let $BFSTable = createBFSTableViz(nodeList);
+    let $BFSQueue = createBFSQueueViz();
     let visitOrder = [];
     console.log("root: ", $root.data("id"))
     console.log("BFS start")
@@ -7,8 +11,14 @@ export function BFS(nodeList, $root) {
         console.log("id: ", node.data("id"))
         // node.css("border-color", "black")
         node.data("discovered", false);
-    })
+        node.data("distance", 0)
+    })//"Ø"
     $root.data("discovered", true);
+    $("#" + $root.data("id") + "-" + "distance").html(String($root.data("distance")))
+    $("#" + $root.data("id") + "-" + "discovered").html("Ø")
+    // $("#bfs-queue-viz").html($("#bfs-queue-viz").html() + $root.data("id"));
+    // $("#" + $currNeighbor.data("id") + "-" + "discovered").html("true")
+    // $("#" + $currNeighbor.data("id") + "-" + "discovered").html("true")
     $root.addClass("visited-node")
     queue.push($root)
     visitOrder.push($root.data("id"))
@@ -16,24 +26,30 @@ export function BFS(nodeList, $root) {
     let iterations = 0;
     for (let i = 0; i < nodeList.length; i++) {
         console.log("uho hns")
-        if (delay != nodeList.length * 1000) {
+        if (delay != nodeList.length * 2000) {
             setTimeout(() => {
                 let $currNode = queue.shift();
+                $("#" + $currNode.data("id") + "-" + "visited").html("true")
+                $("#bfs-queue-viz").html($("#bfs-queue-viz").html() + $currNode.data("id"));
                 $currNode.removeClass("discovered-node")
                 $currNode.addClass("visited-node")
                 console.log("current node: ", $currNode.data("id"))
                 $currNode.data("neighbors").forEach((node) => {
-                    if (node.neighbor.data("discovered") == false) {
-                        node.neighbor.data("discovered", true);
-                        node.neighbor.addClass("discovered-node")
+                    let $currNeighbor = node.neighbor
+                    if ($currNeighbor.data("discovered") == false) {
+                        $currNeighbor.data("distance", $currNode.data("distance") + 1)
+                        $("#" + $currNeighbor.data("id") + "-" + "distance").html(String($currNeighbor.data("distance")))
+                        $("#" + $currNeighbor.data("id") + "-" + "discovered").html("true")
+                        $currNeighbor.data("discovered", true);
+                        $currNeighbor.addClass("discovered-node")
                         // node.edge.css("background", "orange")
-                        queue.push(node.neighbor)
-                        visitOrder.push(node.neighbor.data("id"))
+                        queue.push($currNeighbor)
+                        visitOrder.push($currNeighbor.data("id"))
                     }
                 })
                 // $currNode.css("border-color", "green")
             }, delay)
-            delay += 1000;
+            delay += 2000;
         }
         
         // iterations++;
@@ -53,7 +69,7 @@ export function BFS(nodeList, $root) {
             node.removeClass("visited-node")
             node.removeClass("discovered-node")
             node.removeData("discovered");
-
+            node.removeData("distance");
         })
         console.log("BFS end.")
         let visitOrderStr = "";
@@ -61,9 +77,69 @@ export function BFS(nodeList, $root) {
             visitOrderStr = visitOrderStr + node + " "
         })
         console.log("Visit Order: ", visitOrderStr)
-    }, ((nodeList.length + 1) * 1000))
+        // $BFSTable.remove();
+    }, ((nodeList.length + 1) * 2000))
 
 }
+
+function createBFSTableViz(nodeList) {
+    let $controlPanel = $("#graph-control-panel")
+    let $BFSTable =  $( 
+        `
+            <table class="bfs-viz-feature">
+                <thead>
+                    <tr>
+                        <th>Node</th>
+                        <th>Discovered</th>
+                        <th>Visited</th>
+                        <th>Distance</th>
+                    </tr>
+                </thead>
+                
+            </table>
+        `
+    )
+    let $BFSTableBody = $(
+        `
+            <tbody>
+
+            </tbody>
+        `
+    )
+    //appends one row for each node in adj list
+    nodeList.forEach(node => {
+        let nodeTableInfo = $(
+            `
+                <tr> 
+                    <td>${node.data("id")}</td>
+                    <td id=${node.data("id") + "-" + "discovered"}>False</td>
+                    <td id=${node.data("id") + "-" + "visited"}>False</td>
+                    <td id=${node.data("id") + "-" + "distance"}>∞</td>
+                </tr>
+            `
+        )
+        nodeTableInfo.appendTo($BFSTableBody)
+    })
+    $BFSTableBody.appendTo($BFSTable)
+    $BFSTable.appendTo($controlPanel)
+
+    return $BFSTable
+}
+
+function createBFSQueueViz() {
+    let $controlPanel = $("#graph-control-panel")
+    let $BFSQueue =  $( 
+        `
+            <div class="bfs-viz-feature">
+                <div id="bfs-queue-viz">
+                    []
+                </div>
+            </div>
+        `
+    )
+    $BFSQueue.appendTo($controlPanel)
+}
+
 
     // label root as discovered
     //   Q.enqueue(root)
