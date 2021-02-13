@@ -1,8 +1,13 @@
 export function BFS(nodeList, $root) {
     //remove any existing viz features
     $(".bfs-viz-feature").remove();
-    let $BFSTable = createBFSTableViz(nodeList);
-    let $BFSQueue = createBFSQueueViz();
+    createBFSTableViz(nodeList);
+    createBFSQueueViz();
+    createBFSVisitOrderViz();
+    //queue to add elements.
+    let $bfsQueue = $("#bfs-queue-viz") 
+    //queue to add elements.
+    let $bfsVisitOrder = $("#bfs-visit-order-viz") 
     let visitOrder = [];
     console.log("root: ", $root.data("id"))
     console.log("BFS start")
@@ -16,21 +21,29 @@ export function BFS(nodeList, $root) {
     $root.data("discovered", true);
     $("#" + $root.data("id") + "-" + "distance").html(String($root.data("distance")))
     $("#" + $root.data("id") + "-" + "discovered").html("Ø")
-    // $("#bfs-queue-viz").html($("#bfs-queue-viz").html() + $root.data("id"));
-    // $("#" + $currNeighbor.data("id") + "-" + "discovered").html("true")
-    // $("#" + $currNeighbor.data("id") + "-" + "discovered").html("true")
+
+    let $nextQueueItem = $(`<span>${$root.data("id") + " "}</span>`)
+    // let $nextVisitedNode = $(`<span>${$root.data("id") + " "}</span>`)
+    // console.log("nodeastext:", $nodeAsText)
+    $nextQueueItem.appendTo($bfsQueue);
+    // $nextVisitedNode.appendTo($bfsVisitOrder)
+
     $root.addClass("visited-node")
     queue.push($root)
     visitOrder.push($root.data("id"))
-    let delay = 0;
+    let delay = 2000; //first iteration is delayed for smoothness
     let iterations = 0;
     for (let i = 0; i < nodeList.length; i++) {
-        console.log("uho hns")
-        if (delay != nodeList.length * 2000) {
+        if (delay != (nodeList.length * 2000) + 2000) {
             setTimeout(() => {
                 let $currNode = queue.shift();
                 $("#" + $currNode.data("id") + "-" + "visited").html("true")
-                $("#bfs-queue-viz").html($("#bfs-queue-viz").html() + $currNode.data("id"));
+                let $queueHead = $bfsQueue.children()[0]
+                $queueHead.remove();
+
+                let $nextVisitedNode = $(`<span>${$currNode.data("id") + " "}</span>`)
+                $nextVisitedNode.appendTo($bfsVisitOrder)
+                
                 $currNode.removeClass("discovered-node")
                 $currNode.addClass("visited-node")
                 console.log("current node: ", $currNode.data("id"))
@@ -39,12 +52,14 @@ export function BFS(nodeList, $root) {
                     if ($currNeighbor.data("discovered") == false) {
                         $currNeighbor.data("distance", $currNode.data("distance") + 1)
                         $("#" + $currNeighbor.data("id") + "-" + "distance").html(String($currNeighbor.data("distance")))
-                        $("#" + $currNeighbor.data("id") + "-" + "discovered").html("true")
-                        $currNeighbor.data("discovered", true);
-                        $currNeighbor.addClass("discovered-node")
+                        markNodeAsDiscovered($currNeighbor);
                         // node.edge.css("background", "orange")
                         queue.push($currNeighbor)
                         visitOrder.push($currNeighbor.data("id"))
+                        
+                        //add to visitorder
+                        $nextQueueItem = $(`<span>${$currNeighbor.data("id") + " "}</span>`)
+                        $nextQueueItem.appendTo($bfsQueue);
                     }
                 })
                 // $currNode.css("border-color", "green")
@@ -126,14 +141,40 @@ function createBFSTableViz(nodeList) {
     return $BFSTable
 }
 
+function markNodeAsDiscovered($node) {
+    $("#" + $node.data("id") + "-" + "discovered").html("true")
+    $node.data("discovered", true);
+    $node.addClass("discovered-node")
+}
+
 function createBFSQueueViz() {
     let $controlPanel = $("#graph-control-panel")
     let $BFSQueue =  $( 
         `
-            <div class="bfs-viz-feature">
-                <div id="bfs-queue-viz">
-                    []
-                </div>
+            <div class="bfs-viz-feature ">
+                <header>Queue</header>
+                <span>[</span>
+                <span id="bfs-queue-viz">
+                    
+                </span>
+                <span>]</span>
+            </div>
+        `
+    )
+    $BFSQueue.appendTo($controlPanel)
+}
+
+function createBFSVisitOrderViz() {
+    let $controlPanel = $("#graph-control-panel")
+    let $BFSQueue =  $( 
+        `
+            <div class="bfs-viz-feature ">
+                <header>Visit Order</header>
+                <span>[</span>
+                <span id="bfs-visit-order-viz">
+                    
+                </span>
+                <span>]</span>
             </div>
         `
     )

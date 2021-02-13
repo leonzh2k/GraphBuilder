@@ -14,6 +14,7 @@ jQuery(() => {
     var lockedNodes = [];
     var $activeNode; //lets us tell what node we should be performing actions on (e.g. renaming, deleting)
     var $activeEdge; //lets us tell what edge we should be performing actions on (e.g. renaming, deleting)
+    var modifyingGraphAllowed; // lets us disable renaming/deleting while algorithms are running
     //initialize context menus. They are hidden until called.
     var $graphArea = $("#graph-area");
     //an invisible background, right clicks on here enable the non-node context menu.
@@ -111,7 +112,7 @@ jQuery(() => {
             //     console.log('moving');
             // })
             //double click to focus on node
-            $node.dblclick(function focusOnNode(e) {
+            $node.click(function focusOnNode(e) {
                 console.log("node dbl click");
                 $node.addClass("focused-node")
                 //check that you did not select the same node twice
@@ -195,6 +196,10 @@ jQuery(() => {
     })
     //shows rename node input
     $("#rename-node-label").on('click', (e) => {
+        //do nothing if mod graph not allowed 
+        if (!modifyingGraphAllowed) {
+            return;
+        }
         console.log("rename node")
         showRenameNodeMenu($renameNodeMenu, e.pageX, e.pageY);
         hideContextMenus();
@@ -231,6 +236,10 @@ jQuery(() => {
         }
     })
     $("#delete-node-label").click(function deleteNode(e) {
+        //do nothing if mod graph not allowed 
+        if (!modifyingGraphAllowed) {
+            return;
+        }
         //need to remove all references to node (like in other node's adj lists)
         //also need to remove all edges connected to node
         for (let i = 0; i < nodeList.length; i++) {
@@ -255,6 +264,10 @@ jQuery(() => {
         printAdjList(nodeList);
     })
     $("#delete-edge-label").click(function deleteEdge(e) {
+        //do nothing if mod graph not allowed 
+        if (!modifyingGraphAllowed) {
+            return;
+        }
         console.log("edge deleted")
         for (let i = 0; i < nodeList.length; i++) {
             for (let j = 0; j < nodeList[i].data("neighbors").length; j++) {
@@ -274,7 +287,15 @@ jQuery(() => {
     })
 
     $("#run-bfs-button").click(() => {
+        modifyingGraphAllowed = false;
+        console.log("modifying graph disabled")
         BFS(nodeList, nodeList[0])
+        //need settimeout b/c of asynchronous code in BFS()
+        setTimeout(() => {
+            console.log("modifying graph allowed")
+            modifyingGraphAllowed = true;
+        }, (nodeList.length + 2) * 2000)
+
     })
     //
     //enables draggability for all nodes when you mouse up. This is for when 
