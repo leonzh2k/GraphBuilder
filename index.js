@@ -7,6 +7,7 @@ import { moveEdge } from "./modules/moveEdge.js";
 import { createEdge } from "./modules/createEdge.js"
 import { printAdjList } from "./modules/printAdjList.js"
 import {BFS} from "./modules/algorithms/BFS.js"
+import {DFS} from "./modules/algorithms/DFS.js"
 // import { join } from "path"
 
 jQuery(() => {
@@ -287,10 +288,30 @@ jQuery(() => {
     })
 
     $("#run-bfs-button").click(() => {
+        if (nodeList.length == 0) {
+            console.log("node list is empty")
+            return;
+        }
         modifyingGraphAllowed = false;
         console.log("modifying graph disabled")
         BFS(nodeList, nodeList[0])
         //need settimeout b/c of asynchronous code in BFS()
+        setTimeout(() => {
+            console.log("modifying graph allowed")
+            modifyingGraphAllowed = true;
+        }, (nodeList.length + 2) * 2000)
+
+    })
+
+    $("#run-dfs-button").click(() => {
+        if (nodeList.length == 0) {
+            console.log("node list is empty")
+            return;
+        }
+        modifyingGraphAllowed = false;
+        console.log("modifying graph disabled")
+        DFS(nodeList, nodeList[0])
+        //need settimeout b/c of asynchronous code in DFS()
         setTimeout(() => {
             console.log("modifying graph allowed")
             modifyingGraphAllowed = true;
@@ -324,19 +345,3 @@ jQuery(() => {
     // })
 })
 
-// function moveEdge(startNode, endNode, edge) {
-//     let x1 = parseInt(startNode.style.left) + 25;
-//     let y1 = parseInt(startNode.style.top) + 25;
-//     let x2 = parseInt(endNode.style.left) + 25;
-//     let y2 = parseInt(endNode.style.top) + 25;
-//     var length = Math.sqrt((x1-x2)*(x1-x2) + (y1-y2)*(y1-y2));
-//     //console.log("length is %d", length);
-//     var angle = Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI;
-//     //console.log("angle is %d", angle);
-//     var transform = 'rotate('+ angle +'deg)';
-//     //edge.id = ""
-//     edge.style.transform = transform;
-//     edge.style.width = length.toString() + 'px';
-//     edge.style.left = x1.toString() + 'px';
-//     edge.style.top = y1.toString() + 'px';
-//   }

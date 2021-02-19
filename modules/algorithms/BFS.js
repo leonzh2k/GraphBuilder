@@ -1,4 +1,5 @@
 export function BFS(nodeList, $root) {
+    if (nodeList.length == 0) return
     //remove any existing viz features
     $(".bfs-viz-feature").remove();
     createBFSTableViz(nodeList);
