@@ -1,8 +1,11 @@
 export function DFS(nodeList, $root) {
     $(".control-panel-viz-feature").remove();
+    createDFSTableViz(nodeList);
+    createBFSStackViz();
     createDFSVisitOrderViz();
+    //queue to add elements.
+    let $dfsStackViz = $("#dfs-stack-viz") 
     let $dfsVisitOrder = $("#dfs-visit-order-viz") 
-    if (nodeList.length == 0) return
     let visitOrder = [];
     let commandOrder = [];
     console.log("root: ", $root.data("id"))
@@ -10,18 +13,33 @@ export function DFS(nodeList, $root) {
     let stack = [];
     nodeList.forEach(node => {
         console.log("id: ", node.data("id"))
-        // node.css("border-color", "black")
         node.data("visited", false);
-        // node.data("distance", 0)
     })//"Ø"
     stack.push($root)
+    commandOrder.push({
+        node: $root,
+        command: "visit",
+        isFirstStep: true,
+        nodesToMarkAsDiscovered: []
+    })
     while (stack.length != 0) {
         let $currNode = stack.pop();
         visitOrder.push($currNode.data("id"))
+        let nodesToDiscover = [];
         if ($currNode.data("visited") == false) {
+
+            $currNode.data("neighbors").forEach(node => {
+                let $currNeighbor = node.neighbor
+                if ($currNeighbor.data("visited") == false) {
+                    nodesToDiscover.push($currNeighbor)
+                }
+            })
+
             commandOrder.push({
                 node: $currNode,
-                command: "visit"
+                command: "visit",
+                isFirstStep: false,
+                nodesToMarkAsDiscovered: nodesToDiscover
             })
         }
 
@@ -31,20 +49,50 @@ export function DFS(nodeList, $root) {
                 let $currNeighbor = node.neighbor
                 if ($currNeighbor.data("visited") == false) {
                     stack.push($currNeighbor)
+                    // commandOrder.push({
+                    //     node: $currNeighbor,
+                    //     command: "discover"
+                    // })
                 }
 
             })
         }
     }
-    let delay = 2000;
+    let delay = 1000;
     commandOrder.forEach(command => {
         setTimeout(() =>{
             let $currNode = command.node
-            // console.log("stuf")
-            $currNode.addClass("visited-node")
-            let $nextVisitedNode = $(`<span>${$currNode.data("id") + " "}</span>`)
-            $nextVisitedNode.appendTo($dfsVisitOrder)
+            if (command.isFirstStep) {
+                markNodeAsDiscovered($currNode)
+                markNodeAsVisited($currNode)
+                let $nextStackItem = $(`<span>${$currNode.data("id") + " "}</span>`)
+                $nextStackItem.appendTo($dfsStackViz);
+                
+            }
+            else {
+                if (command.command == "visit") {
+                    let $stackTop = $dfsStackViz.children()[$dfsStackViz.children().length - 1]
+                    $stackTop.remove();
+                    //update node on table as visited
+                    markNodeAsVisited($currNode)
+                    command.nodesToMarkAsDiscovered.forEach($node => {
+                        let $nextStackItem = $(`<span>${$node.data("id") + " "}</span>`)
+                        $nextStackItem.appendTo($dfsStackViz);
+                        markNodeAsDiscovered($node)
+                    })
+                    
+                    //update visit order
+                    let $nextVisitedNode = $(`<span>${$currNode.data("id") + " "}</span>`)
+                    $nextVisitedNode.appendTo($dfsVisitOrder)
+                }
+                else {
+                    $currNode.addClass("discovered-node")
+                    $("#dfs-" + $currNode.data("id") + "-" + "discovered").html("true")
+                }
+            }
 
+            
+            // console.log("stuf")
         }, delay)
         delay += 2000;
     })
@@ -52,6 +100,7 @@ export function DFS(nodeList, $root) {
     setTimeout(() => {
         nodeList.forEach(node => {
             node.removeClass("visited-node")
+            node.removeClass("discovered-node")
             // node.removeClass("discovered-node")
             node.removeData("visited");
             // node.removeData("distance");
@@ -70,77 +119,36 @@ export function DFS(nodeList, $root) {
     // console.log("command order", commandOrder)
 }
 
-// export function DFS(nodeList, $root) {
-//     if (nodeList.length == 0) return
-//     let visitOrder = [];
-//     console.log("root: ", $root.data("id"))
-//     console.log("DFS start")
-//     nodeList.forEach(node => {
-//         console.log("id: ", node.data("id"))
-//         // node.css("border-color", "black")
-//         node.data("visited", false);
-//         // node.data("distance", 0)
-//     })//"Ø"
-//     DFS_Explore($root, visitOrder)
-//     console.log(visitOrder)
-// }
+function markNodeAsDiscovered($node) {
+    console.log($node)
+    $("#dfs-" + $node.data("id") + "-" + "discovered").html("true")
+    $node.addClass("discovered-node")
+}
 
-// function DFS_Explore($currNode, visitOrder) {
-//     visitOrder.push($currNode.data("id"))
-//     $currNode.data("visited", true)
-//     $currNode.data("neighbors").forEach(node => {
-//         let $currNeighbor = node.neighbor
-//         if ($currNeighbor.data("visited") == false) {
-//             DFS_Explore($currNeighbor, visitOrder)
-//         }
-//         // else {
-//         //     console.log("cycle detected")
-//         // }
-
-//     })
-// }
-
-//DFS(V, E, Root):  
-// V: vertices, E: edges, Root: start    
-// For each vertex v in V:       
-//  Processed[v] = false    
-//  DFS_Explore(V, E, Root, Processed)
-//  DFS_Explore(V, E, Curr_node, Processed):    
-//  Process Curr_node    
-//  Processed[Curr_node] = True    
-//  For each neighbor n of Curr_node:        
-//  If Processed[n] is False:            
-//  DFS_Explore(V, E, n, Processed)
-
-// Initialize an empty stack for storage of nodes, S.
-// For each vertex u, define u.visited to be false.
-// Push the root (first node to be visited) onto S.
-// While S is not empty:
-//     Pop the first element in S, u.
-//     If u.visited = false, then:
-//         U.visited = true
-//         for each unvisited neighbor w of u:
-//             Push w into S.
-// End process when all nodes have been visited.
+function markNodeAsVisited($node) {
+    console.log($node)
+    $("#dfs-" + $node.data("id") + "-" + "visited").html("true")
+    $node.removeClass("discovered-node")
+    $node.addClass("visited-node")
+}
 
 function createDFSTableViz(nodeList) {
     let $controlPanel = $("#graph-control-panel")
-    let $BFSTable =  $( 
+    let $DFSTable =  $( 
         `
-            <table class="bfs-viz-feature">
+            <table class="dfs-viz-feature control-panel-viz-feature">
                 <thead>
                     <tr>
                         <th>Node</th>
                         <th>Discovered</th>
                         <th>Visited</th>
-                        <th>Distance</th>
                     </tr>
                 </thead>
                 
             </table>
         `
     )
-    let $BFSTableBody = $(
+    let $DFSTableBody = $(
         `
             <tbody>
 
@@ -153,42 +161,35 @@ function createDFSTableViz(nodeList) {
             `
                 <tr> 
                     <td>${node.data("id")}</td>
-                    <td id=${node.data("id") + "-" + "discovered"}>False</td>
-                    <td id=${node.data("id") + "-" + "visited"}>False</td>
-                    <td id=${node.data("id") + "-" + "distance"}>∞</td>
+                    <td id=${"dfs" + "-" + node.data("id") + "-" + "discovered"}>False</td>
+                    <td id=${"dfs" + "-" + node.data("id") + "-" + "visited"}>False</td>
                 </tr>
             `
         )
-        nodeTableInfo.appendTo($BFSTableBody)
+        nodeTableInfo.appendTo($DFSTableBody)
     })
-    $BFSTableBody.appendTo($BFSTable)
-    $BFSTable.appendTo($controlPanel)
+    $DFSTableBody.appendTo($DFSTable)
+    $DFSTable.appendTo($controlPanel)
 
-    return $BFSTable
+    return $DFSTable
 }
 
-// function markNodeAsDiscovered($node) {
-//     $("#" + $node.data("id") + "-" + "discovered").html("true")
-//     $node.data("discovered", true);
-//     $node.addClass("discovered-node")
-// }
-
-// function createBFSQueueViz() {
-//     let $controlPanel = $("#graph-control-panel")
-//     let $BFSQueue =  $( 
-//         `
-//             <div class="bfs-viz-feature ">
-//                 <header>Queue</header>
-//                 <span>[</span>
-//                 <span id="bfs-queue-viz">
+function createBFSStackViz() {
+    let $controlPanel = $("#graph-control-panel")
+    let $DFSStack =  $( 
+        `
+            <div class="dfs-viz-feature control-panel-viz-feature ">
+                <header>Stack (grows sideways)</header>
+                <span>[</span>
+                <span id="dfs-stack-viz">
                     
-//                 </span>
-//                 <span>]</span>
-//             </div>
-//         `
-//     )
-//     $BFSQueue.appendTo($controlPanel)
-// }
+                </span>
+                <span>]</span>
+            </div>
+        `
+    )
+    $DFSStack.appendTo($controlPanel)
+}
 
 function createDFSVisitOrderViz() {
     let $controlPanel = $("#graph-control-panel")
