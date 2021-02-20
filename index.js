@@ -91,6 +91,9 @@ jQuery(() => {
                     })
                 },
                 stop: function() {
+                    $node.data("neighbors").forEach((neighbor) => {
+                        moveEdge($node, neighbor.neighbor, neighbor.edge);
+                    })
                     $node.removeClass("moving-node");
                 },
             });
