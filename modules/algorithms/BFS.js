@@ -1,7 +1,7 @@
 export function BFS(nodeList, $root) {
     if (nodeList.length == 0) return
     //remove any existing viz features
-    $(".bfs-viz-feature").remove();
+    $(".control-panel-viz-feature").remove();
     createBFSTableViz(nodeList);
     createBFSQueueViz();
     createBFSVisitOrderViz();
@@ -102,7 +102,7 @@ function createBFSTableViz(nodeList) {
     let $controlPanel = $("#graph-control-panel")
     let $BFSTable =  $( 
         `
-            <table class="bfs-viz-feature">
+            <table class="bfs-viz-feature control-panel-viz-feature">
                 <thead>
                     <tr>
                         <th>Node</th>
@@ -152,7 +152,7 @@ function createBFSQueueViz() {
     let $controlPanel = $("#graph-control-panel")
     let $BFSQueue =  $( 
         `
-            <div class="bfs-viz-feature ">
+            <div class="bfs-viz-feature control-panel-viz-feature">
                 <header>Queue</header>
                 <span>[</span>
                 <span id="bfs-queue-viz">
@@ -169,7 +169,7 @@ function createBFSVisitOrderViz() {
     let $controlPanel = $("#graph-control-panel")
     let $BFSQueue =  $( 
         `
-            <div class="bfs-viz-feature ">
+            <div class="bfs-viz-feature control-panel-viz-feature">
                 <header>Visit Order</header>
                 <span>[</span>
                 <span id="bfs-visit-order-viz">

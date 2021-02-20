@@ -1,6 +1,10 @@
 export function DFS(nodeList, $root) {
+    $(".control-panel-viz-feature").remove();
+    createDFSVisitOrderViz();
+    let $dfsVisitOrder = $("#dfs-visit-order-viz") 
     if (nodeList.length == 0) return
     let visitOrder = [];
+    let commandOrder = [];
     console.log("root: ", $root.data("id"))
     console.log("DFS start")
     let stack = [];
@@ -14,6 +18,10 @@ export function DFS(nodeList, $root) {
     while (stack.length != 0) {
         let $currNode = stack.pop();
         visitOrder.push($currNode.data("id"))
+        commandOrder.push({
+            node: $currNode,
+            command: "visit"
+        })
         if ($currNode.data("visited") == false) {
             $currNode.data("visited", true)
             $currNode.data("neighbors").forEach(node => {
@@ -25,8 +33,38 @@ export function DFS(nodeList, $root) {
             })
         }
     }
+    let delay = 2000;
+    commandOrder.forEach(command => {
+        setTimeout(() =>{
+            let $currNode = command.node
+            // console.log("stuf")
+            $currNode.addClass("visited-node")
+            let $nextVisitedNode = $(`<span>${$currNode.data("id") + " "}</span>`)
+            $nextVisitedNode.appendTo($dfsVisitOrder)
 
-    console.log(visitOrder)
+        }, delay)
+        delay += 2000;
+    })
+    delay += 4000; //delay before highlights on nodes disseappear
+    setTimeout(() => {
+        nodeList.forEach(node => {
+            node.removeClass("visited-node")
+            // node.removeClass("discovered-node")
+            node.removeData("visited");
+            // node.removeData("distance");
+        })
+        console.log("DFS end.")
+        // console.log("visit order:", visitOrder)
+        let visitOrderStr = "";
+        visitOrder.forEach((node) => {
+            visitOrderStr = visitOrderStr + node + " "
+        })
+        console.log("Visit Order: ", visitOrderStr)
+        // $BFSTable.remove();
+    }, delay)
+
+    // console.log("visit order:", visitOrder)
+    // console.log("command order", commandOrder)
 }
 
 // export function DFS(nodeList, $root) {
@@ -149,22 +187,22 @@ function createDFSTableViz(nodeList) {
 //     $BFSQueue.appendTo($controlPanel)
 // }
 
-// function createBFSVisitOrderViz() {
-//     let $controlPanel = $("#graph-control-panel")
-//     let $BFSQueue =  $( 
-//         `
-//             <div class="bfs-viz-feature ">
-//                 <header>Visit Order</header>
-//                 <span>[</span>
-//                 <span id="bfs-visit-order-viz">
+function createDFSVisitOrderViz() {
+    let $controlPanel = $("#graph-control-panel")
+    let $dfsVisitOrder =  $( 
+        `
+            <div class="dfs-viz-feature control-panel-viz-feature">
+                <header>Visit Order</header>
+                <span>[</span>
+                <span id="dfs-visit-order-viz">
                     
-//                 </span>
-//                 <span>]</span>
-//             </div>
-//         `
-//     )
-//     $BFSQueue.appendTo($controlPanel)
-// }
+                </span>
+                <span>]</span>
+            </div>
+        `
+    )
+    $dfsVisitOrder.appendTo($controlPanel)
+}
 
 
     // label root as discovered
