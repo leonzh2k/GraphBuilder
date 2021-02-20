@@ -18,10 +18,13 @@ export function DFS(nodeList, $root) {
     while (stack.length != 0) {
         let $currNode = stack.pop();
         visitOrder.push($currNode.data("id"))
-        commandOrder.push({
-            node: $currNode,
-            command: "visit"
-        })
+        if ($currNode.data("visited") == false) {
+            commandOrder.push({
+                node: $currNode,
+                command: "visit"
+            })
+        }
+
         if ($currNode.data("visited") == false) {
             $currNode.data("visited", true)
             $currNode.data("neighbors").forEach(node => {

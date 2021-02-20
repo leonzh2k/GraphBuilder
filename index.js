@@ -15,7 +15,7 @@ jQuery(() => {
     var lockedNodes = [];
     var $activeNode; //lets us tell what node we should be performing actions on (e.g. renaming, deleting)
     var $activeEdge; //lets us tell what edge we should be performing actions on (e.g. renaming, deleting)
-    var modifyingGraphAllowed; // lets us disable renaming/deleting while algorithms are running
+    var modifyingGraphAllowed = true; // lets us disable renaming/deleting while algorithms are running
     //initialize context menus. They are hidden until called.
     var $graphArea = $("#graph-area");
     //an invisible background, right clicks on here enable the non-node context menu.
