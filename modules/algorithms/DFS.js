@@ -96,7 +96,19 @@ export function DFS(nodeList, $root) {
         }, delay)
         delay += 2000;
     })
-    delay += 4000; //delay before highlights on nodes disseappear
+    delay += 2000;
+    let innerDelay = 0;
+    setTimeout(() => {
+        for (let i = $dfsStackViz.children().length - 1; i > -1; i-- ) {
+            setTimeout(() => {
+                let $stackTop = $dfsStackViz.children()[i]
+                $stackTop.remove();
+            }, innerDelay)
+            innerDelay += 2000;
+        }
+    }, delay)
+    
+    delay += 3000; //delay before highlights on nodes disseappear
     setTimeout(() => {
         nodeList.forEach(node => {
             node.removeClass("visited-node")
