@@ -13,4 +13,6 @@ export function moveEdge($draggedNode, $neighborNode, $edge) {
         .css("width", length.toString() + 'px')
         .css("left", x1.toString() + 'px')
         .css("top", y1.toString() + 'px')
+
+    
 }

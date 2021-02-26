@@ -40,6 +40,7 @@ export function createEdgeContextMenu() {
     var $edgeContextMenu =  $( 
         `
             <div id='edge-context-menu' class='graph-area-context-menu'>
+                <img id='change-edge-weight-label' height=25px width=25px src="https://www.svgrepo.com/show/24909/pencil.svg" style='color:white; font-size:18px; cursor:pointer;'/>
                 <img id='delete-edge-label' height=25px width=25px src="https://www.svgrepo.com/show/186288/trash-bin.svg" style='color:white; font-size:18px; cursor:pointer;'/>
             </div>
         ` 

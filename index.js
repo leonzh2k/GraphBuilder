@@ -4,6 +4,8 @@ import {createGraphAreaBackground} from './modules/createGraphAreaBackground.js'
 import {createNameNodeMenu, showNameNodeMenu, hideNameNodeMenu} from './modules/nameNodeMenu.js'
 import { createRenameNodeMenu, showRenameNodeMenu, hideRenameNodeMenu  } from "./modules/renameNodeMenu.js"
 import { moveEdge } from "./modules/moveEdge.js";
+import { moveWeight } from "./modules/moveWeight.js";
+import { createWeight } from "./modules/createWeight.js";
 import { createEdge } from "./modules/createEdge.js"
 import { printAdjList } from "./modules/printAdjList.js"
 import {BFS} from "./modules/algorithms/BFS.js"
@@ -88,11 +90,13 @@ jQuery(() => {
                     //moves all edges connected to node.
                     $node.data("neighbors").forEach((neighbor) => {
                         moveEdge($node, neighbor.neighbor, neighbor.edge);
+                        moveWeight($node, neighbor.neighbor, neighbor.weight);
                     })
                 },
                 stop: function() {
                     $node.data("neighbors").forEach((neighbor) => {
                         moveEdge($node, neighbor.neighbor, neighbor.edge);
+                        moveWeight($node, neighbor.neighbor, neighbor.weight);
                     })
                     $node.removeClass("moving-node");
                 },
@@ -156,7 +160,8 @@ jQuery(() => {
                     //this will automatically update neighbors in adj list since these are references
                     //create an edge
                     let $edge = createEdge($node1, $node2);
-                    
+                    //create weight
+                    let $edgeWeight = createWeight($node1, $node2, $graphArea)
                     //add event listenerse
                     $edge.on("mouseenter", (e) => {
                         $edge.css("background", "orange")
@@ -179,11 +184,13 @@ jQuery(() => {
 
                     $node1.data("neighbors").push({
                         neighbor: $node2,
-                        edge: $edge
+                        edge: $edge,
+                        weight: $edgeWeight
                     })
                     $node2.data("neighbors").push({
                         neighbor: $node1,
-                        edge: $edge
+                        edge: $edge,
+                        weight: $edgeWeight
                     })
                     printAdjList(nodeList);
                     $edge.appendTo($graphArea);
