@@ -4,8 +4,8 @@ import {createGraphAreaBackground} from './modules/createGraphAreaBackground.js'
 import {createNameNodeMenu, showNameNodeMenu, hideNameNodeMenu} from './modules/nameNodeMenu.js'
 import { createRenameNodeMenu, showRenameNodeMenu, hideRenameNodeMenu  } from "./modules/renameNodeMenu.js"
 import { moveEdge } from "./modules/moveEdge.js";
-import { moveWeight } from "./modules/moveWeight.js";
-import { createWeight } from "./modules/createWeight.js";
+import { moveEdgeWeight } from "./modules/moveEdgeWeight.js";
+import { createEdgeWeight } from "./modules/createEdgeWeight.js";
 import { createEdge } from "./modules/createEdge.js"
 import { printAdjList } from "./modules/printAdjList.js"
 import {BFS} from "./modules/algorithms/BFS.js"
@@ -90,13 +90,13 @@ jQuery(() => {
                     //moves all edges connected to node.
                     $node.data("neighbors").forEach((neighbor) => {
                         moveEdge($node, neighbor.neighbor, neighbor.edge);
-                        moveWeight($node, neighbor.neighbor, neighbor.weight);
+                        moveEdgeWeight($node, neighbor.neighbor, neighbor.weight);
                     })
                 },
                 stop: function() {
                     $node.data("neighbors").forEach((neighbor) => {
                         moveEdge($node, neighbor.neighbor, neighbor.edge);
-                        moveWeight($node, neighbor.neighbor, neighbor.weight);
+                        moveEdgeWeight($node, neighbor.neighbor, neighbor.weight);
                     })
                     $node.removeClass("moving-node");
                 },
@@ -161,7 +161,7 @@ jQuery(() => {
                     //create an edge
                     let $edge = createEdge($node1, $node2);
                     //create weight
-                    let $edgeWeight = createWeight($node1, $node2, $graphArea)
+                    let $edgeWeight = createEdgeWeight($node1, $node2, $graphArea)
                     //add event listenerse
                     $edge.on("mouseenter", (e) => {
                         $edge.css("background", "orange")
@@ -280,12 +280,13 @@ jQuery(() => {
             return;
         }
         console.log("edge deleted")
+        //find the nodes linked by the edge and remove the edge from both nodes
         for (let i = 0; i < nodeList.length; i++) {
             for (let j = 0; j < nodeList[i].data("neighbors").length; j++) {
                 // let neighbor = nodeList[i].data("neighbors")[j];
                 if (nodeList[i].data("neighbors")[j].edge == $activeEdge) {
-                    // console.log("edge found");
-                    // console.log("length of list before: ", nodeList[i].data("neighbors").length)
+                    //removes the "weight" element from the dom
+                    nodeList[i].data("neighbors")[j].weight.remove();
                     let filteredNodeList = nodeList[i].data("neighbors").filter((j) => j.edge != $activeEdge); //removes neighbor/edge pair from adj list
                     nodeList[i].data("neighbors", filteredNodeList);
                     // console.log("length of list after: ", nodeList[i].data("neighbors").length)
@@ -295,6 +296,10 @@ jQuery(() => {
         $activeEdge.remove();
         hideContextMenus();
         printAdjList(nodeList);
+    })
+
+    $("#change-edge-weight-label").click(function changeEdgeWeight(e) {
+        console.log("change edge weight")
     })
 
     $("#run-bfs-button").click(() => {
