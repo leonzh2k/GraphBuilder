@@ -1,6 +1,8 @@
 export function createEdge($node1, $node2) {
     let $edge = $("<div></div>");
     $edge.addClass("edge");
+    $edge.data("linkedNodes", [$node1, $node2])
+    console.log("nodes linked by nodes: ", $edge.data("linkedNodes"))
 
     //edge geometry
     let x1 = parseInt($node1.css("left")) + 25;

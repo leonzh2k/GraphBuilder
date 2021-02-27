@@ -5,7 +5,7 @@ export function printAdjList(nodeList) {
         console.log("node id: ", node.data("id"));
         console.log("------------------")
         node.data("neighbors").forEach(neighbor => {
-            console.log(neighbor.neighbor.data("id"))
+            console.log(neighbor.neighbor.data("id"), "Weight: ", neighbor.weight)
         })
         console.log("------------------")
     })

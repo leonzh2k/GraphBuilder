@@ -3,6 +3,7 @@ import {createGraphAreaContextMenu, createNodeContextMenu, showGraphAreaContextM
 import {createGraphAreaBackground} from './modules/createGraphAreaBackground.js'
 import {createNameNodeMenu, showNameNodeMenu, hideNameNodeMenu} from './modules/nameNodeMenu.js'
 import { createRenameNodeMenu, showRenameNodeMenu, hideRenameNodeMenu  } from "./modules/renameNodeMenu.js"
+import { createChangeEdgeWeightMenu, showChangeEdgeWeightMenu, hideChangeEdgeWeightMenu} from "./modules/changeEdgeWeightMenu.js"
 import { moveEdge } from "./modules/moveEdge.js";
 import { moveEdgeWeight } from "./modules/moveEdgeWeight.js";
 import { createEdgeWeight } from "./modules/createEdgeWeight.js";
@@ -29,6 +30,7 @@ jQuery(() => {
     var $renameNodeMenu = createRenameNodeMenu();
     var $nodeContextMenu = createNodeContextMenu();
     var $edgeContextMenu = createEdgeContextMenu();
+    var $changeEdgeWeightMenu = createChangeEdgeWeightMenu();
     //need to not show this if click on 
     $graphAreaBackground.on('mousedown', (e) => {
         if (e.button == 2) {
@@ -43,6 +45,7 @@ jQuery(() => {
             showGraphAreaContextMenu($graphAreaContextMenu, e.pageX, e.pageY);
         }
         else {
+            console.log("hide all context mneus")
             hideContextMenus(); //hides all context menus
             $nameNodeMenu.hide();
             $renameNodeMenu.hide();
@@ -53,12 +56,21 @@ jQuery(() => {
     })
     //when click on context menu show create node option.
     $("#create-node-label").on('mousedown', (e) => {
+        if (!modifyingGraphAllowed) {
+            console.log("modifying graph not allowed")
+            return;
+        }
         // console.log("node created")
-        showNameNodeMenu($nameNodeMenu, e.pageX, e.pageY);
         hideContextMenus();
+        showNameNodeMenu($nameNodeMenu, e.pageX, e.pageY);
+        
     })
     //This actually handles the node creation logic.
     $("#name-node-button").on('click', (e) => {
+        if (!modifyingGraphAllowed) {
+            console.log("modifying graph not allowed")
+            return;
+        }
         let nodeName = String($("#node-name").val());
         if (nodeName.length <= 0 || nodeName.length > 3) {
             alert("node name must be between 1 and 3 chars long")
@@ -90,13 +102,13 @@ jQuery(() => {
                     //moves all edges connected to node.
                     $node.data("neighbors").forEach((neighbor) => {
                         moveEdge($node, neighbor.neighbor, neighbor.edge);
-                        moveEdgeWeight($node, neighbor.neighbor, neighbor.weight);
+                        moveEdgeWeight($node, neighbor.neighbor, neighbor.weightDOMElement);
                     })
                 },
                 stop: function() {
                     $node.data("neighbors").forEach((neighbor) => {
                         moveEdge($node, neighbor.neighbor, neighbor.edge);
-                        moveEdgeWeight($node, neighbor.neighbor, neighbor.weight);
+                        moveEdgeWeight($node, neighbor.neighbor, neighbor.weightDOMElement);
                     })
                     $node.removeClass("moving-node");
                 },
@@ -121,7 +133,10 @@ jQuery(() => {
             // })
             //double click to focus on node
             $node.click(function focusOnNode(e) {
-                console.log("node dbl click");
+                if (!modifyingGraphAllowed) {
+                    console.log("modifying graph not allowed")
+                    return
+                }
                 $node.addClass("focused-node")
                 //check that you did not select the same node twice
                 if (lockedNodes[0] == $node) {
@@ -172,11 +187,11 @@ jQuery(() => {
                             $activeEdge = $edge;
                             hideContextMenus(); //hides any context menus that might still be up
                             // //hides the node name input
-                            // $nameNodeMenu.hide();
-                            // $renameNodeMenu.hide();
-                            // //resets the value in the node name input.
-                            // $("#node-name").val(null);
-                            // $("#node-rename").val(null);
+                            $nameNodeMenu.hide();
+                            $renameNodeMenu.hide();
+                            //resets the value in the node name input.
+                            $("#node-name").val(null);
+                            $("#node-rename").val(null);
                             console.log("right clicked on edge")
                             showEdgeContextMenu($edgeContextMenu, e.pageX, e.pageY);
                         }
@@ -185,12 +200,16 @@ jQuery(() => {
                     $node1.data("neighbors").push({
                         neighbor: $node2,
                         edge: $edge,
-                        weight: $edgeWeight
+                        // the weight as displayed on the screen
+                        weightDOMElement: $edgeWeight,
+                        weight: 1
                     })
                     $node2.data("neighbors").push({
                         neighbor: $node1,
                         edge: $edge,
-                        weight: $edgeWeight
+                        // the weight as displayed on the screen
+                        weightDOMElement: $edgeWeight,
+                        weight: 1
                     })
                     printAdjList(nodeList);
                     $edge.appendTo($graphArea);
@@ -299,7 +318,39 @@ jQuery(() => {
     })
 
     $("#change-edge-weight-label").click(function changeEdgeWeight(e) {
+        if (!modifyingGraphAllowed) {
+            console.log("modifying graph not allowed")
+            return;
+        }
         console.log("change edge weight")
+        hideContextMenus();
+        showChangeEdgeWeightMenu($changeEdgeWeightMenu, e.pageX, e.pageY);
+    })
+
+    //handles actual edge weight changing logic
+    $("#change-edge-weight-button").click(() => {
+        console.log("weight changed")
+        let newWeight = $("#change-edge-weight").val();
+        if (newWeight > 20) {
+            alert("weights must be under 20")
+            return;
+        }
+        console.log(newWeight)
+        console.log($activeEdge)
+        // find the edges of the linked nodes and change the weights
+        $activeEdge.data("linkedNodes")[0].data("neighbors").forEach(neighbor => {
+            if (neighbor.edge == $activeEdge) {
+                neighbor.weightDOMElement.html(String(newWeight))
+                neighbor.weight = newWeight
+            }
+        })
+        $activeEdge.data("linkedNodes")[1].data("neighbors").forEach(neighbor => {
+            if (neighbor.edge == $activeEdge) {
+                neighbor.weightDOMElement.html(String(newWeight))
+                neighbor.weight = newWeight
+            }
+        })
+
     })
 
     $("#run-bfs-button").click(() => {

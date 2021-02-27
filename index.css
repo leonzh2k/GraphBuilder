@@ -117,6 +117,18 @@ body {
   z-index: 3;
 }
 
+#change-edge-weight-menu {
+  position: absolute;
+  height: 50px;
+  width: 200px;
+  background-color: #444444;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  z-index: 3;
+}
+
 /* NODE, EDGES */
 .node {
   /* cursor: pointer; */
