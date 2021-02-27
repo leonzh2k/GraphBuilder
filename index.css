@@ -145,6 +145,10 @@ body {
   align-items: center;
 }
 
+.edge-weight {
+  cursor: pointer;
+}
+
 /* NODE INTERACTIONS */
 .focused-node {
   border: 3.5px red solid;

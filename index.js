@@ -177,6 +177,19 @@ jQuery(() => {
                     let $edge = createEdge($node1, $node2);
                     //create weight
                     let $edgeWeight = createEdgeWeight($node1, $node2, $graphArea)
+                    $edgeWeight.data("edge", $edge)
+                    $edgeWeight.addClass("edge-weight")
+                    $edgeWeight.click(function changeEdgeWeight(e) {
+                        // sets active edge to edge of the weight
+                        $activeEdge = $edgeWeight.data("edge")
+                        if (!modifyingGraphAllowed) {
+                            console.log("modifying graph not allowed")
+                            return;
+                        }
+                        console.log("change edge weight")
+                        hideContextMenus();
+                        showChangeEdgeWeightMenu($changeEdgeWeightMenu, e.pageX, e.pageY);
+                    })
                     //add event listenerse
                     $edge.on("mouseenter", (e) => {
                         $edge.css("background", "orange")
@@ -279,7 +292,7 @@ jQuery(() => {
 
                     // console.log("node found");
                     // console.log("length of list before: ", nodeList[i].data("neighbors").length)
-
+                    nodeList[i].data("neighbors")[j].weightDOMElement.remove(); //deletes visual weight
                     nodeList[i].data("neighbors")[j].edge.remove(); //deletes edge associated with neighbor
                     let filteredNodeList = nodeList[i].data("neighbors").filter((j) => j.neighbor != $activeNode); //removes neighbor/edge pair from adj list
                     nodeList[i].data("neighbors", filteredNodeList)
@@ -305,7 +318,7 @@ jQuery(() => {
                 // let neighbor = nodeList[i].data("neighbors")[j];
                 if (nodeList[i].data("neighbors")[j].edge == $activeEdge) {
                     //removes the "weight" element from the dom
-                    nodeList[i].data("neighbors")[j].weight.remove();
+                    nodeList[i].data("neighbors")[j].weightDOMElement.remove();
                     let filteredNodeList = nodeList[i].data("neighbors").filter((j) => j.edge != $activeEdge); //removes neighbor/edge pair from adj list
                     nodeList[i].data("neighbors", filteredNodeList);
                     // console.log("length of list after: ", nodeList[i].data("neighbors").length)
@@ -350,7 +363,7 @@ jQuery(() => {
                 neighbor.weight = newWeight
             }
         })
-
+        hideChangeEdgeWeightMenu($changeEdgeWeightMenu);
     })
 
     $("#run-bfs-button").click(() => {

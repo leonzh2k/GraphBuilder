@@ -155,6 +155,10 @@ $node-border-width: 3.5px;
     align-items: center;
 }
 
+.edge-weight {
+    cursor: pointer
+}
+
 /* NODE INTERACTIONS */
 
 .focused-node {
