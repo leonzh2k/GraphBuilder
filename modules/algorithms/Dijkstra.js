@@ -1,7 +1,6 @@
 export function Dijkstra(nodeList, $start) {
-    // if (999999999 < Infinity) {
-    //     console.log("infiinity")
-    // }
+    $(".control-panel-viz-feature").remove();
+    createDijkstraTableViz(nodeList)
     nodeList.forEach(node => {
         node.data("finalized", false)
         node.data("distance", Infinity)
@@ -54,7 +53,51 @@ export function Dijkstra(nodeList, $start) {
 }
 
 
+function createDijkstraTableViz(nodeList) {
+    let $controlPanel = $("#graph-control-panel")
+    let $DijkstraTable =  $( 
+        `
+            <table class="dijkstra-viz-feature control-panel-viz-feature">
+                <thead>
+                    <tr>
+                        <th>Node</th>
+                        <th>Discovered</th>
+                        <th>Visited</th>
+                        <th>Distance</th>
+                        <th>Parent</th>
+                    </tr>
+                </thead>
+                
+            </table>
+        `
+    )
+    let $DijkstraTableBody = $(
+        `
+            <tbody>
 
+            </tbody>
+        `
+    )
+    //appends one row for each node in adj list
+    nodeList.forEach(node => {
+        let nodeTableInfo = $(
+            `
+                <tr> 
+                    <td>${node.data("id")}</td>
+                    <td id=${node.data("id") + "-" + "discovered"}>False</td>
+                    <td id=${node.data("id") + "-" + "visited"}>False</td>
+                    <td id=${node.data("id") + "-" + "distance"}>∞</td>
+                    <td id=${node.data("id") + "-" + "parent"}>∞</td>
+                </tr>
+            `
+        )
+        nodeTableInfo.appendTo($DijkstraTableBody)
+    })
+    $DijkstraTableBody.appendTo($DijkstraTable)
+    $DijkstraTable.appendTo($controlPanel)
+
+    return $DijkstraTable
+}
 
 
 // init arrays Finalized[v] = false, Distance[v] = Infinity, Parent[v] = None for each v
