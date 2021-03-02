@@ -12,6 +12,8 @@ import { printAdjList } from "./modules/printAdjList.js"
 import {BFS} from "./modules/algorithms/BFS.js"
 import {DFS} from "./modules/algorithms/DFS.js"
 import { Dijkstra } from "./modules/algorithms/Dijkstra.js"
+import { Prim } from "./modules/algorithms/Prim.js"
+
 // import { join } from "path"
 
 jQuery(() => {
@@ -346,8 +348,8 @@ jQuery(() => {
         console.log("weight changed")
         let newWeight = Number($("#change-edge-weight").val());
         console.log("new weight: ", newWeight)
-        if (newWeight > 20) {
-            alert("weights must be under 20")
+        if (newWeight > 100) {
+            alert("weights must be under 100")
             return;
         }
         console.log(newWeight)
@@ -409,6 +411,23 @@ jQuery(() => {
         modifyingGraphAllowed = false;
         console.log("modifying graph disabled")
         Dijkstra(nodeList, nodeList[0])
+        //need settimeout b/c of asynchronous code in DFS()
+        setTimeout(() => {
+            console.log("modifying graph allowed")
+            modifyingGraphAllowed = true;
+        }, (nodeList.length + 2) * 2000)
+
+    })
+
+    $("#run-prim-button").click(() => {
+        console.log("prim")
+        if (nodeList.length == 0) {
+            console.log("node list is empty")
+            return;
+        }
+        modifyingGraphAllowed = false;
+        console.log("modifying graph disabled")
+        Prim(nodeList, nodeList[0])
         //need settimeout b/c of asynchronous code in DFS()
         setTimeout(() => {
             console.log("modifying graph allowed")
