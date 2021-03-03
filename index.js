@@ -304,6 +304,10 @@ jQuery(() => {
                 }
             }
         }
+        //checks if node is focused, if so, need to remove it from lockedNodes
+        if (lockedNodes.includes($activeNode)) {
+            lockedNodes = lockedNodes.filter(node => node != $activeNode)
+        }
         nodeList = nodeList.filter(node => node != $activeNode);
         $activeNode.remove();
         hideContextMenus();
