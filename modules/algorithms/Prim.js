@@ -1,5 +1,6 @@
 export function Prim(nodeList, $start) {
     $(".control-panel-viz-feature").remove();
+    createPrimTableViz(nodeList);
     // reset colors of all nodes and edges
     nodeList.forEach(node => {
         node.css("border", "3.5px black solid")
@@ -62,6 +63,7 @@ export function Prim(nodeList, $start) {
         commandOrder.push({
             command: "addToMST", //means we are highlighting this edge so show it is added to MST
             nodeToAdd: neighborsOfMST[0].neighbor,
+            nodeToAddsNeighbor: neighborsOfMST[0].mstVertex,
             edge: neighborsOfMST[0].edge
         })
         console.log("MST: ")
@@ -79,6 +81,7 @@ export function Prim(nodeList, $start) {
             setTimeout(() => {
                 command.node.css("border", "3.5px green solid")
                 command.node.data("inMST", true)
+                $("#" + command.node.data("id") + "-" + "inMST").html("true")
                 // nodeList.forEach(node => {
                 //     if (node == command.node) {
                 //         console.log("die")
@@ -131,6 +134,8 @@ export function Prim(nodeList, $start) {
             setTimeout(() => {
                 command.nodeToAdd.css("border", "3.5px green solid")
                 command.edge.css("backgroundColor", "yellow")
+                $("#" + command.nodeToAdd.data("id") + "-" + "inMST").html("true")
+                $("#" + command.nodeToAdd.data("id") + "-" + "mstNeighbor").html(command.nodeToAddsNeighbor.data("id"))
                 // command.edge.data("")
             }, delay)
             // setTimeout(() => {
@@ -142,6 +147,47 @@ export function Prim(nodeList, $start) {
     })
     
 
+}
+function createPrimTableViz(nodeList) {
+    let $controlPanel = $("#graph-control-panel")
+    let $PrimTable =  $( 
+        `
+            <table class="prim-viz-feature control-panel-viz-feature">
+                <thead>
+                    <tr>
+                        <th>Node</th>
+                        <th>In MST</th>
+                        <th>MST Neighbor</th>
+                    </tr>
+                </thead>
+                
+            </table>
+        `
+    )
+    let $PrimTableBody = $(
+        `
+            <tbody>
+
+            </tbody>
+        `
+    )
+    //appends one row for each node in adj list
+    nodeList.forEach(node => {
+        let nodeTableInfo = $(
+            `
+                <tr> 
+                    <td>${node.data("id")}</td>
+                    <td id=${node.data("id") + "-" + "inMST"}>False</td>
+                    <td id=${node.data("id") + "-" + "mstNeighbor"}>N/A</td>
+                </tr>
+            `
+        )
+        nodeTableInfo.appendTo($PrimTableBody)
+    })
+    $PrimTableBody.appendTo($PrimTable)
+    $PrimTable.appendTo($controlPanel)
+
+    return $PrimTable
 }
 
 // nodeListCpy = nodeList.filter(node => !MSTVertices.includes(node))
