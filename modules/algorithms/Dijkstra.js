@@ -7,6 +7,8 @@ export function Dijkstra(nodeList, $start) {
         node.data("parent", null)
     })
     $start.data("distance", 0)
+    $("#" + $start.data("id") + "-" + "finalized").html("true")
+    $("#" + $start.data("id") + "-" + "distance").html(String($start.data("distance")))
     let numberOfFinalizedVertices = 0;
     while (numberOfFinalizedVertices < nodeList.length) {
         console.log(nodeList)
@@ -25,6 +27,7 @@ export function Dijkstra(nodeList, $start) {
         }
         console.log("lowest distance vertex: ", lowestDistanceVertex.data("id"))
         lowestDistanceVertex.data("finalized", true);
+        $("#" + lowestDistanceVertex.data("id") + "-" + "finalized").html("true")
         numberOfFinalizedVertices++;
 
         lowestDistanceVertex.data("neighbors").forEach(neighbor => {
@@ -36,6 +39,8 @@ export function Dijkstra(nodeList, $start) {
                 console.log("new neighbor distance: ", neighbor.neighbor.data("distance"))
                 neighbor.neighbor.data("parent", lowestDistanceVertex)
                 console.log("new parent: ", neighbor.neighbor.data("parent").data("id"))
+                $("#" + neighbor.neighbor.data("id") + "-" + "distance").html(String(neighbor.neighbor.data("distance")))
+                $("#" + neighbor.neighbor.data("id") + "-" + "parent").html(lowestDistanceVertex.data("id"))
             }
         })
     }
@@ -61,8 +66,7 @@ function createDijkstraTableViz(nodeList) {
                 <thead>
                     <tr>
                         <th>Node</th>
-                        <th>Discovered</th>
-                        <th>Visited</th>
+                        <th>Finalized</th>
                         <th>Distance</th>
                         <th>Parent</th>
                     </tr>
@@ -84,10 +88,9 @@ function createDijkstraTableViz(nodeList) {
             `
                 <tr> 
                     <td>${node.data("id")}</td>
-                    <td id=${node.data("id") + "-" + "discovered"}>False</td>
-                    <td id=${node.data("id") + "-" + "visited"}>False</td>
+                    <td id=${node.data("id") + "-" + "finalized"}>False</td>
                     <td id=${node.data("id") + "-" + "distance"}>∞</td>
-                    <td id=${node.data("id") + "-" + "parent"}>∞</td>
+                    <td id=${node.data("id") + "-" + "parent"}>N/A</td>
                 </tr>
             `
         )
