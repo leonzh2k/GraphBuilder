@@ -76,6 +76,7 @@ export function Prim(nodeList, $start) {
         node.data("inMST", false)
     })
     let delay = 1000;
+    let speedScale = 1000; //delay between steps
     commandOrder.forEach(command => {
         if (command.command == "firstNode") {
             setTimeout(() => {
@@ -108,12 +109,12 @@ export function Prim(nodeList, $start) {
                 console.log("in mst")
                 setTimeout(() => {
                     command.node.css("border", "3.5px green solid")
-                }, delay + (2000 * (command.node.data("neighbors").length + 1)))
+                }, delay + (speedScale * (command.node.data("neighbors").length + 1)))
             }
             else {
                 setTimeout(() => {
                     command.node.css("border", "3.5px black solid")
-                }, delay + (2000 * (command.node.data("neighbors").length + 1)))
+                }, delay + (speedScale * (command.node.data("neighbors").length + 1)))
             }
             
         }
@@ -128,7 +129,7 @@ export function Prim(nodeList, $start) {
             }, delay)
             setTimeout(() => {
                 command.edge.css("backgroundColor", "black")
-            }, delay + 2000)
+            }, delay + speedScale)
         }
         else if (command.command == "addToMST") {
             setTimeout(() => {
@@ -143,7 +144,7 @@ export function Prim(nodeList, $start) {
             //     command.edge.css("backgroundColor", "yellow")
             // }, delay + 2000)
         }
-        delay += 2000;
+        delay += speedScale;
     })
     
 

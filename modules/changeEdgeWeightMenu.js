@@ -2,7 +2,7 @@ export function createChangeEdgeWeightMenu() {
     var $changeEdgeWeightMenu =  $( 
         `
             <div id='change-edge-weight-menu' class='graph-area-context-menu'>
-                <input id="change-edge-weight" type="number" min="0" max="20"size="3"/>
+                <input id="change-edge-weight" type="number" min="-80" max="80"size="3"/>
                 <button id="change-edge-weight-button">Change Weight</button>
             </div>" 
         `
