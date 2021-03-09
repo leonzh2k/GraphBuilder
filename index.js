@@ -181,7 +181,10 @@ jQuery(() => {
                     let $edge = createEdge($node1, $node2);
                     //create weight
                     let $edgeWeight = createEdgeWeight($node1, $node2, $graphArea)
+                    // let weight know about its edge
                     $edgeWeight.data("edge", $edge)
+                    // let edge know about its weight
+                    $edge.data("weight", $edgeWeight);
                     $edgeWeight.addClass("edge-weight")
                     //
                     $edgeWeight.click(function changeEdgeWeight(e) {
@@ -215,7 +218,7 @@ jQuery(() => {
                             showEdgeContextMenu($edgeContextMenu, e.pageX, e.pageY);
                         }
                     })
-
+                    
                     $node1.data("neighbors").push({
                         neighbor: $node2,
                         edge: $edge,
@@ -344,13 +347,15 @@ jQuery(() => {
     })
 
     $("#change-edge-weight-label").click(function changeEdgeWeight(e) {
+
         if (!modifyingGraphAllowed) {
             console.log("modifying graph not allowed")
             return;
         }
         console.log("change edge weight")
         hideContextMenus();
-        showChangeEdgeWeightMenu($changeEdgeWeightMenu, e.pageX, e.pageY);
+        let activeEdgeWeightValue = Number($activeEdge.data("weight").html());
+        showChangeEdgeWeightMenu($changeEdgeWeightMenu, e.pageX, e.pageY, activeEdgeWeightValue);
     })
 
     //handles actual edge weight changing logic
