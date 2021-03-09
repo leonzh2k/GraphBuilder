@@ -500,5 +500,9 @@ jQuery(() => {
             
     //     })
     // })
+
+    $("#close-instructions-button").click(() => {
+        $("#instructions").hide();
+    })
 })
 

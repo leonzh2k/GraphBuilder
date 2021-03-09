@@ -11,7 +11,12 @@
             <div id="site-body-wrapper">
                 <!-- disables context mneu -->
                 <div id="graph-area" oncontextmenu="return false;">
-                
+                    <div id="instructions" style="float: right; color: white; background-color: rgb(59, 59, 59);">
+                        <h1>instructions <span id="close-instructions-button" style="float: right;">X</span></h1>
+                        <p>1. Right click on the graph space to create a node</p>
+                        <p>2. Left click two nodes to create an edge</p>
+                        <p>3. Right click an edge if you want to change edge weight or delete an edge</p>
+                    </div>
                 </div> 
                 <div id="graph-control-panel">
                     <button id="run-bfs-button">Run BFS</button>
