@@ -18,6 +18,7 @@ import { Prim } from "./modules/algorithms/Prim.js"
 
 jQuery(() => {
     var nodeList = [];
+    // var edgeList = []; //for easy checking of edges
     var lockedNodes = [];
     var $activeNode; //lets us tell what node we should be performing actions on (e.g. renaming, deleting)
     var $activeEdge; //lets us tell what edge we should be performing actions on (e.g. renaming, deleting)
@@ -182,6 +183,7 @@ jQuery(() => {
                     let $edgeWeight = createEdgeWeight($node1, $node2, $graphArea)
                     $edgeWeight.data("edge", $edge)
                     $edgeWeight.addClass("edge-weight")
+                    //
                     $edgeWeight.click(function changeEdgeWeight(e) {
                         // sets active edge to edge of the weight
                         $activeEdge = $edgeWeight.data("edge")
@@ -191,7 +193,8 @@ jQuery(() => {
                         }
                         console.log("change edge weight")
                         hideContextMenus();
-                        showChangeEdgeWeightMenu($changeEdgeWeightMenu, e.pageX, e.pageY);
+                        // console.log($active)
+                        showChangeEdgeWeightMenu($changeEdgeWeightMenu, e.pageX, e.pageY, Number($edgeWeight.html()));
                     })
                     //add event listenerse
                     $edge.on("mouseenter", (e) => {
@@ -227,7 +230,10 @@ jQuery(() => {
                         weightDOMElement: $edgeWeight,
                         weight: 1
                     })
-                    printAdjList(nodeList);
+                    // edgeList.push({
+                        
+                    // })
+                    // printAdjList(nodeList);
                     $edge.appendTo($graphArea);
                     $node1.removeClass("focused-node")
                     $node2.removeClass("focused-node")
@@ -391,6 +397,7 @@ jQuery(() => {
     })
 
     $("#run-dfs-button").click(() => {
+
         if (nodeList.length == 0) {
             console.log("node list is empty")
             return;
@@ -407,7 +414,21 @@ jQuery(() => {
     })
 
     $("#run-dijkstra-button").click(() => {
-        console.log("dijkstra")
+        //first check that there are no negative edges
+        let negativeEdgeWeightExists = false;
+        nodeList.forEach(node => {
+            node.data("neighbors").forEach(neighbor => {
+                if (neighbor.weight < 0) {
+                    console.log("negative weight found")
+                    negativeEdgeWeightExists = true;
+                }
+            })
+        })
+        if (negativeEdgeWeightExists) {
+            console.log("can't run dijkstra with negative edges")
+            return;
+        }
+        console.log("dijkstra start")
         if (nodeList.length == 0) {
             console.log("node list is empty")
             return;

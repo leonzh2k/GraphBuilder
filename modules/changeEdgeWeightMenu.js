@@ -12,7 +12,10 @@ export function createChangeEdgeWeightMenu() {
     return $changeEdgeWeightMenu;
 }
 
-export function showChangeEdgeWeightMenu($changeEdgeWeightMenu, mouseX, mouseY) {
+export function showChangeEdgeWeightMenu($changeEdgeWeightMenu, mouseX, mouseY, currentEdgeWeightValue) {
+    //update value of input field to current edge's weight
+    console.log(currentEdgeWeightValue)
+    $("#change-edge-weight").val(currentEdgeWeightValue);
     $changeEdgeWeightMenu.css('top', mouseY - 25);
     $changeEdgeWeightMenu.css('left', mouseX - 35);
     $changeEdgeWeightMenu.show();
