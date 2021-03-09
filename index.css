@@ -145,6 +145,17 @@ body {
   align-items: center;
 }
 
+.edge {
+  border-left: 6px solid black;
+  position: absolute;
+  transform-origin: 0 100%;
+  height: 3px;
+  /* Line width of 3 */
+  background: #000;
+  /* Black fill */
+  z-index: 0;
+}
+
 .edge-weight {
   cursor: pointer;
 }
@@ -158,17 +169,6 @@ body {
   border: 3.5px green solid;
 }
 
-.edge {
-  border-left: 6px solid black;
-  position: absolute;
-  transform-origin: 0 100%;
-  height: 3px;
-  /* Line width of 3 */
-  background: #000;
-  /* Black fill */
-  z-index: 0;
-}
-
 /* ALGORHYTHM STYLES */
 .visited-node {
   border: 3.5px blue solid;
@@ -176,6 +176,25 @@ body {
 
 .discovered-node {
   border: 3.5px green solid;
+}
+
+.mst-tree-node {
+  border: 3.5px green solid;
+}
+
+.mst-tree-edge {
+  background-color: yellow;
+}
+
+.checked-edge {
+  border-left: 6px solid black;
+  position: absolute;
+  transform-origin: 0 100%;
+  height: 3px;
+  /* Line width of 3 */
+  background: orange;
+  /* Black fill */
+  z-index: 0;
 }
 
 table, th,

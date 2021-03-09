@@ -23,6 +23,7 @@ jQuery(() => {
     var $activeNode; //lets us tell what node we should be performing actions on (e.g. renaming, deleting)
     var $activeEdge; //lets us tell what edge we should be performing actions on (e.g. renaming, deleting)
     var modifyingGraphAllowed = true; // lets us disable renaming/deleting while algorithms are running
+    var runningAlgosAllowed = true;
     //initialize context menus. They are hidden until called.
     var $graphArea = $("#graph-area");
     //an invisible background, right clicks on here enable the non-node context menu.
@@ -197,7 +198,8 @@ jQuery(() => {
                         console.log("change edge weight")
                         hideContextMenus();
                         // console.log($active)
-                        showChangeEdgeWeightMenu($changeEdgeWeightMenu, e.pageX, e.pageY, Number($edgeWeight.html()));
+                        let activeEdgeWeightValue = Number($edgeWeight.html());
+                        showChangeEdgeWeightMenu($changeEdgeWeightMenu, e.pageX, e.pageY, activeEdgeWeightValue);
                     })
                     //add event listenerse
                     $edge.on("mouseenter", (e) => {
@@ -386,39 +388,47 @@ jQuery(() => {
     })
 
     $("#run-bfs-button").click(() => {
-        if (nodeList.length == 0) {
-            console.log("node list is empty")
+        if (nodeList.length == 0 || !runningAlgosAllowed) {
+            console.log("node list is empty or algo already running")
             return;
         }
         modifyingGraphAllowed = false;
+        runningAlgosAllowed = false;
         console.log("modifying graph disabled")
         BFS(nodeList, nodeList[0])
         //need settimeout b/c of asynchronous code in BFS()
         setTimeout(() => {
             console.log("modifying graph allowed")
             modifyingGraphAllowed = true;
+            runningAlgosAllowed = true;
         }, (nodeList.length + 2) * 2000)
 
     })
 
     $("#run-dfs-button").click(() => {
 
-        if (nodeList.length == 0) {
-            console.log("node list is empty")
+        if (nodeList.length == 0 || !runningAlgosAllowed) {
+            console.log("node list is empty or algo already running")
             return;
         }
         modifyingGraphAllowed = false;
+        runningAlgosAllowed = false;
         console.log("modifying graph disabled")
         DFS(nodeList, nodeList[0])
         //need settimeout b/c of asynchronous code in DFS()
         setTimeout(() => {
             console.log("modifying graph allowed")
             modifyingGraphAllowed = true;
+            runningAlgosAllowed = true;
         }, (nodeList.length + 2) * 2000)
 
     })
 
     $("#run-dijkstra-button").click(() => {
+        if (nodeList.length == 0 || !runningAlgosAllowed) {
+            console.log("node list is empty or algo already running")
+            return;
+        }
         //first check that there are no negative edges
         let negativeEdgeWeightExists = false;
         nodeList.forEach(node => {
@@ -433,35 +443,35 @@ jQuery(() => {
             console.log("can't run dijkstra with negative edges")
             return;
         }
-        console.log("dijkstra start")
-        if (nodeList.length == 0) {
-            console.log("node list is empty")
-            return;
-        }
+        // console.log("dijkstra start")
         modifyingGraphAllowed = false;
+        runningAlgosAllowed = false;
         console.log("modifying graph disabled")
         Dijkstra(nodeList, nodeList[0])
         //need settimeout b/c of asynchronous code in DFS()
         setTimeout(() => {
             console.log("modifying graph allowed")
             modifyingGraphAllowed = true;
+            runningAlgosAllowed = true;
+
         }, (nodeList.length + 2) * 2000)
 
     })
 
     $("#run-prim-button").click(() => {
-        console.log("prim")
-        if (nodeList.length == 0) {
-            console.log("node list is empty")
+        if (nodeList.length == 0 || !runningAlgosAllowed) {
+            console.log("node list is empty or algorithm is already running")
             return;
         }
         modifyingGraphAllowed = false;
+        runningAlgosAllowed = false;
         console.log("modifying graph disabled")
         Prim(nodeList, nodeList[0])
         //need settimeout b/c of asynchronous code in DFS()
         setTimeout(() => {
             console.log("modifying graph allowed")
             modifyingGraphAllowed = true;
+            runningAlgosAllowed = true;
         }, (nodeList.length + 2) * 2000)
 
     })
