@@ -3,8 +3,8 @@ export function createGraphAreaContextMenu() {
     var $graphAreaContextMenu =  $( "<div id='graph-area-background-context-menu' class='graph-area-context-menu'></div>" )
     var $createNodeLabel =  $( 
         `
-            <div id='create-node-label' style='color:white; font-size:24px; cursor:pointer;'>
-                <img id='add-node-image' src='https://www.svgrepo.com/show/157858/plus.svg' height=40px width=40px />
+            <div id='create-node-label' style='color:white; font-size:24px; cursor:pointer;' >
+                <img id='add-node-image' src='https://www.svgrepo.com/show/157858/plus.svg' height=40px width=40px title="create node" />
             </div>" 
         `
     )
@@ -21,8 +21,8 @@ export function createNodeContextMenu() {
     var $nodeContextMenu =  $( 
         `
             <div id='node-context-menu' class='graph-area-context-menu'>
-                <img id='rename-node-label' height=25px width=25px src="https://www.svgrepo.com/show/24909/pencil.svg" style='color:white; font-size:18px; cursor:pointer;'/>
-                <img id='delete-node-label' height=25px width=25px src="https://www.svgrepo.com/show/186288/trash-bin.svg" style='color:white; font-size:18px; cursor:pointer;'/>
+                <img id='rename-node-label' height=25px width=25px src="https://www.svgrepo.com/show/24909/pencil.svg" style='color:white; font-size:18px; cursor:pointer;' title="rename node"/>
+                <img id='delete-node-label' height=25px width=25px src="https://www.svgrepo.com/show/186288/trash-bin.svg" style='color:white; font-size:18px; cursor:pointer;' title="delete node"/>
                 
             </div>
         ` 
@@ -40,8 +40,8 @@ export function createEdgeContextMenu() {
     var $edgeContextMenu =  $( 
         `
             <div id='edge-context-menu' class='graph-area-context-menu'>
-                <img id='change-edge-weight-label' height=25px width=25px src="https://www.svgrepo.com/show/24909/pencil.svg" style='color:white; font-size:18px; cursor:pointer;'/>
-                <img id='delete-edge-label' height=25px width=25px src="https://www.svgrepo.com/show/186288/trash-bin.svg" style='color:white; font-size:18px; cursor:pointer;'/>
+                <img id='change-edge-weight-label' height=25px width=25px src="https://www.svgrepo.com/show/24909/pencil.svg" style='color:white; font-size:18px; cursor:pointer;' title="rename edge"/>
+                <img id='delete-edge-label' height=25px width=25px src="https://www.svgrepo.com/show/186288/trash-bin.svg" style='color:white; font-size:18px; cursor:pointer;' title="delete edge"/>
             </div>
         ` 
     )
