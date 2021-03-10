@@ -149,10 +149,10 @@ body {
   border-left: 6px solid black;
   position: absolute;
   transform-origin: 0 100%;
-  height: 3px;
+  height: 5px;
   /* Line width of 3 */
   background: #000;
-  /* Black fill */
+  /* This actually controls the color */
   z-index: 0;
 }
 
@@ -169,6 +169,11 @@ body {
   border: 3.5px green solid;
 }
 
+/* EDGE INTERACTIONS */
+.hovered-edge {
+  background: orange;
+}
+
 /* ALGORHYTHM STYLES */
 .visited-node {
   border: 3.5px blue solid;
@@ -178,23 +183,18 @@ body {
   border: 3.5px green solid;
 }
 
+/* PRIM'S */
 .mst-tree-node {
   border: 3.5px green solid;
 }
 
 .mst-tree-edge {
-  background-color: yellow;
+  background-color: #fff9a2;
 }
 
-.checked-edge {
-  border-left: 6px solid black;
-  position: absolute;
-  transform-origin: 0 100%;
-  height: 3px;
-  /* Line width of 3 */
+.mst-checked-edge {
   background: orange;
   /* Black fill */
-  z-index: 0;
 }
 
 table, th,

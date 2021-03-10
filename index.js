@@ -203,9 +203,15 @@ jQuery(() => {
                     })
                     //add event listenerse
                     $edge.on("mouseenter", (e) => {
-                        $edge.css("background", "orange")
+                        if (!modifyingGraphAllowed) {
+                            return;
+                        }
+                        $edge.addClass("hovered-edge")
                     }).on("mouseleave", (e) => {
-                        $edge.css("background", "black")
+                        if (!modifyingGraphAllowed) {
+                            return;
+                        }
+                        $edge.removeClass("hovered-edge")
                     }).on("mousedown", (e) => {
                         if (e.button == 2) {
                             $activeEdge = $edge;

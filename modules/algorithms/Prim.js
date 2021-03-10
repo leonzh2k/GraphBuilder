@@ -3,9 +3,10 @@ export function Prim(nodeList, $start) {
     createPrimTableViz(nodeList);
     // reset colors of all nodes and edges
     nodeList.forEach(node => {
-        node.css("border", "3.5px black solid")
+        node.attr("class", "node")
+        // node.css("border", "3.5px black solid")
         node.data("neighbors").forEach(neighbor => {
-            neighbor.edge.css("backgroundColor", "black")
+            neighbor.edge.attr("class", "edge")
         })
     })
     let MSTVertices = []; // nodes in the tree that will be grown
@@ -80,7 +81,7 @@ export function Prim(nodeList, $start) {
     commandOrder.forEach(command => {
         if (command.command == "firstNode") {
             setTimeout(() => {
-                command.node.css("border", "3.5px green solid")
+                command.node.addClass("mst-tree-node")
                 command.node.data("inMST", true)
                 $("#" + command.node.data("id") + "-" + "inMST").html("true")
                 // nodeList.forEach(node => {
@@ -93,48 +94,48 @@ export function Prim(nodeList, $start) {
                 // })
             }, delay)
         }
-        else if (command.command == "visitNode") {
-            setTimeout(() => {
-                command.node.css("border", "3.5px blue solid")
-            }, delay)
-            nodeList.forEach(node => {
-                if (node == command.node) {
-                    console.log("die")
-                }
-                if (node.data("inMST") == true) {
-                    console.log("die2")
-                }
-            })
-            if (command.node.data("inMST") == true) {
-                console.log("in mst")
-                setTimeout(() => {
-                    command.node.css("border", "3.5px green solid")
-                }, delay + (speedScale * (command.node.data("neighbors").length + 1)))
-            }
-            else {
-                setTimeout(() => {
-                    command.node.css("border", "3.5px black solid")
-                }, delay + (speedScale * (command.node.data("neighbors").length + 1)))
-            }
+        // else if (command.command == "visitNode") {
+        //     setTimeout(() => {
+        //         command.node.css("border", "3.5px blue solid")
+        //     }, delay)
+        //     nodeList.forEach(node => {
+        //         if (node == command.node) {
+        //             console.log("die")
+        //         }
+        //         if (node.data("inMST") == true) {
+        //             console.log("die2")
+        //         }
+        //     })
+        //     if (command.node.data("inMST") == true) {
+        //         console.log("in mst")
+        //         setTimeout(() => {
+        //             command.node.css("border", "3.5px green solid")
+        //         }, delay + (speedScale * (command.node.data("neighbors").length + 1)))
+        //     }
+        //     else {
+        //         setTimeout(() => {
+        //             command.node.css("border", "3.5px black solid")
+        //         }, delay + (speedScale * (command.node.data("neighbors").length + 1)))
+        //     }
             
-        }
+        // }
         else if (command.command == "checkEdge") {
             setTimeout(() => {
                 if (command.params == "createsCycle") {
                     command.edge.css("backgroundColor", "red")
                 }
                 else {
-                    command.edge.css("backgroundColor", "orange")
+                    command.edge.addClass("mst-checked-edge")
                 }
             }, delay)
             setTimeout(() => {
-                command.edge.css("backgroundColor", "black")
+                command.edge.removeClass("mst-checked-edge")
             }, delay + speedScale)
         }
         else if (command.command == "addToMST") {
             setTimeout(() => {
-                command.nodeToAdd.css("border", "3.5px green solid")
-                command.edge.css("backgroundColor", "yellow")
+                command.nodeToAdd.addClass("mst-tree-node")
+                command.edge.addClass("mst-tree-edge")
                 $("#" + command.nodeToAdd.data("id") + "-" + "inMST").html("true")
                 $("#" + command.nodeToAdd.data("id") + "-" + "mstNeighbor").html(command.nodeToAddsNeighbor.data("id"))
                 // command.edge.data("")

@@ -1,4 +1,12 @@
 export function DFS(nodeList, $root) {
+    // reset colors of all nodes and edges
+    nodeList.forEach(node => {
+        node.attr("class", "node")
+        // node.css("border", "3.5px black solid")
+        node.data("neighbors").forEach(neighbor => {
+            neighbor.edge.attr("class", "edge")
+        })
+    })
     $(".control-panel-viz-feature").remove();
     createDFSTableViz(nodeList);
     createBFSStackViz();
