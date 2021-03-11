@@ -50,7 +50,7 @@ jQuery(() => {
             showGraphAreaContextMenu($graphAreaContextMenu, e.pageX, e.pageY);
         }
         else {
-            console.log("hide all context mneus")
+            // console.log("hide all context mneus")
             hideContextMenus(); //hides all context menus
             $nameNodeMenu.hide();
             $renameNodeMenu.hide();
@@ -129,7 +129,7 @@ jQuery(() => {
                 $("#node-name").val(null);
                 $("#node-rename").val(null);
                 if (e.button == 2) {
-                    console.log("right clicked on node")
+                    // console.log("right clicked on node")
                     showNodeContextMenu($nodeContextMenu, e.pageX, e.pageY);
                 }
             })
@@ -151,7 +151,7 @@ jQuery(() => {
                     return;
                 }
                 lockedNodes.push($node);
-                console.log("lockedNodes", lockedNodes) 
+                // console.log("lockedNodes", lockedNodes) 
                 //two focused nodes create an edge.
                 if (lockedNodes.length == 2) {
                     let $node1 = lockedNodes[0]
@@ -168,7 +168,7 @@ jQuery(() => {
                         }
                     }
                     for (let i = 0; i < $node2.data("neighbors").length; i++) {
-                        console.log(i.neighbor);
+                        // console.log(i.neighbor);
                         if ($node2.data("neighbors")[i].neighbor == $node1) {
                             console.log("edge already exists!")
                             $node1.removeClass("focused-node")
@@ -480,6 +480,24 @@ jQuery(() => {
             runningAlgosAllowed = true;
         }, (nodeList.length + 2) * 2000)
 
+    })
+    $("#stop-algorithm").click(() => {
+        //should clear all timeouts?
+        // https://stackoverflow.com/questions/8860188/javascript-clear-all-timeouts
+        var id = window.setTimeout(function() {}, 0);
+        while (id--) {
+            window.clearTimeout(id); // will do nothing if no timeout with id is present
+        }
+        //reset node and edge colors
+        nodeList.forEach(node => {
+            node.attr("class", "node")
+            // node.css("border", "3.5px black solid")
+            node.data("neighbors").forEach(neighbor => {
+                neighbor.edge.attr("class", "edge")
+            })
+        })
+        modifyingGraphAllowed = true;
+        runningAlgosAllowed = true;
     })
     //
     //enables draggability for all nodes when you mouse up. This is for when 
