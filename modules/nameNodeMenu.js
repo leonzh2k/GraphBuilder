@@ -16,7 +16,11 @@ export function showNameNodeMenu($nameNodeMenu, mouseX, mouseY) {
     $nameNodeMenu.css('top', mouseY - 25);
     $nameNodeMenu.css('left', mouseX - 35);
     $nameNodeMenu.show();
-    document.getElementById("node-name").focus(); //supposed to focus the input but not working
+    // need a delay before the focus for some reason
+    setTimeout(() => {
+        $("#node-name").focus(); 
+        console.log("die")
+    }, 1)
     return $nameNodeMenu;
 }
 

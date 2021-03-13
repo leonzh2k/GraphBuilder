@@ -19,6 +19,11 @@ export function showChangeEdgeWeightMenu($changeEdgeWeightMenu, mouseX, mouseY, 
     $changeEdgeWeightMenu.css('top', mouseY - 25);
     $changeEdgeWeightMenu.css('left', mouseX - 35);
     $changeEdgeWeightMenu.show();
+    // need a delay before the focus for some reason
+    setTimeout(() => {
+        $("#change-edge-weight").focus(); 
+        console.log("die")
+    }, 1)
     // document.getElementById("node-name").focus(); //supposed to focus the input but not working
     return $changeEdgeWeightMenu;
 }

@@ -400,6 +400,7 @@ jQuery(() => {
         }
         modifyingGraphAllowed = false;
         runningAlgosAllowed = false;
+        $("#stop-algorithm-button").show();
         console.log("modifying graph disabled")
         BFS(nodeList, nodeList[0])
         //need settimeout b/c of asynchronous code in BFS()
@@ -419,6 +420,7 @@ jQuery(() => {
         }
         modifyingGraphAllowed = false;
         runningAlgosAllowed = false;
+        $("#stop-algorithm-button").show();
         console.log("modifying graph disabled")
         DFS(nodeList, nodeList[0])
         //need settimeout b/c of asynchronous code in DFS()
@@ -452,6 +454,7 @@ jQuery(() => {
         // console.log("dijkstra start")
         modifyingGraphAllowed = false;
         runningAlgosAllowed = false;
+        $("#stop-algorithm-button").show();
         console.log("modifying graph disabled")
         Dijkstra(nodeList, nodeList[0])
         //need settimeout b/c of asynchronous code in DFS()
@@ -471,6 +474,7 @@ jQuery(() => {
         }
         modifyingGraphAllowed = false;
         runningAlgosAllowed = false;
+        $("#stop-algorithm-button").show();
         console.log("modifying graph disabled")
         Prim(nodeList, nodeList[0])
         //need settimeout b/c of asynchronous code in DFS()
@@ -481,7 +485,7 @@ jQuery(() => {
         }, (nodeList.length + 2) * 2000)
 
     })
-    $("#stop-algorithm").click(() => {
+    $("#stop-algorithm-button").click(() => {
         //should clear all timeouts?
         // https://stackoverflow.com/questions/8860188/javascript-clear-all-timeouts
         var id = window.setTimeout(function() {}, 0);
@@ -498,6 +502,7 @@ jQuery(() => {
         })
         modifyingGraphAllowed = true;
         runningAlgosAllowed = true;
+        $("#stop-algorithm-button").hide();
     })
     //
     //enables draggability for all nodes when you mouse up. This is for when 
