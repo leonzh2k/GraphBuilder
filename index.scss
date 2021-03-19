@@ -192,12 +192,49 @@ $node-border-width: 3.5px;
 
 /* ALGORHYTHM STYLES */
 
+/* BFS and DFS */
+
 .visited-node {
     border: $node-border-width blue solid;
 }
 
 .discovered-node {
     border: $node-border-width green solid;
+}
+
+/* DIJKSTRA'S */
+
+/*
+    when you are visiting the lowest distance node
+*/
+
+.dijkstra-visited-node {
+    border: $node-border-width rgb(0, 173, 0) solid;
+}
+
+/*
+    when you are at the lowest distance node and checking its neighbors
+*/
+.dijkstra-checked-edge {
+    background-color: rgb(255, 157, 0);
+}
+/*
+    when you are updating a distance, highlight the old shortest path with this
+*/
+.dijkstra-old-path-edge {
+    background-color: rgb(255, 8, 8);
+}
+/*
+    when you are updating a distance, highlight the new shortest path with this
+*/
+.dijkstra-new-path-edge {
+    background-color: rgb(94, 255, 0);
+}
+/*
+    when you first update a distance (change it from infinity), highlight the path with this
+*/
+.dijkstra-first-new-path-edge {
+    background-color: rgb(255, 238, 0);
 }
 
 /* PRIM'S */ 

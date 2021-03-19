@@ -11,7 +11,7 @@ import { createEdge } from "./modules/createEdge.js"
 import { printAdjList } from "./modules/printAdjList.js"
 import {BFS} from "./modules/algorithms/BFS.js"
 import {DFS} from "./modules/algorithms/DFS.js"
-import { Dijkstra } from "./modules/algorithms/Dijkstra.js"
+import * as Dijkstra from "./modules/algorithms/Dijkstra.js"
 import { Prim } from "./modules/algorithms/Prim.js"
 
 // import { join } from "path"
@@ -371,8 +371,8 @@ jQuery(() => {
         console.log("weight changed")
         let newWeight = Number($("#change-edge-weight").val());
         console.log("new weight: ", newWeight)
-        if (newWeight > 100) {
-            alert("weights must be under 100")
+        if (newWeight > 200) {
+            alert("weights must be under 200")
             return;
         }
         console.log(newWeight)
@@ -408,6 +408,7 @@ jQuery(() => {
             console.log("modifying graph allowed")
             modifyingGraphAllowed = true;
             runningAlgosAllowed = true;
+            $("#stop-algorithm-button").hide();
         }, (nodeList.length + 2) * 2000)
 
     })
@@ -428,6 +429,7 @@ jQuery(() => {
             console.log("modifying graph allowed")
             modifyingGraphAllowed = true;
             runningAlgosAllowed = true;
+            $("#stop-algorithm-button").hide();
         }, (nodeList.length + 2) * 2000)
 
     })
@@ -456,14 +458,16 @@ jQuery(() => {
         runningAlgosAllowed = false;
         $("#stop-algorithm-button").show();
         console.log("modifying graph disabled")
-        Dijkstra(nodeList, nodeList[0])
+        //gets time dijsktra will run so can enable modifing right after it ends
+        let delay = Dijkstra.getDijkstraTime(nodeList, nodeList[0])
+        Dijkstra.Dijkstra(nodeList, nodeList[0])
         //need settimeout b/c of asynchronous code in DFS()
         setTimeout(() => {
             console.log("modifying graph allowed")
             modifyingGraphAllowed = true;
             runningAlgosAllowed = true;
-
-        }, (nodeList.length + 2) * 2000)
+            $("#stop-algorithm-button").hide();
+        }, delay + 1000)
 
     })
 
@@ -482,6 +486,7 @@ jQuery(() => {
             console.log("modifying graph allowed")
             modifyingGraphAllowed = true;
             runningAlgosAllowed = true;
+            $("#stop-algorithm-button").hide();
         }, (nodeList.length + 2) * 2000)
 
     })
