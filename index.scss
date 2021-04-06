@@ -39,6 +39,7 @@ $site-body-section-widths: 765px;
     height: $site-body-section-widths;
     width: 20%;
     background-color: rgb(63, 63, 63);
+    // height: 100%;
 }
 
 #graph-area {
@@ -78,7 +79,7 @@ $site-body-section-widths: 765px;
 #node-context-menu {
     position: absolute;
     height: 50px;
-    width: 80px;
+    width: 100px;
     background-color: #313131;
     border-radius: 10px;
     display: flex;

@@ -23,7 +23,7 @@ export function createNodeContextMenu() {
             <div id='node-context-menu' class='graph-area-context-menu'>
                 <img id='rename-node-label' height=25px width=25px src="https://www.svgrepo.com/show/24909/pencil.svg" style='color:white; font-size:18px; cursor:pointer;' title="rename node"/>
                 <img id='delete-node-label' height=25px width=25px src="https://www.svgrepo.com/show/186288/trash-bin.svg" style='color:white; font-size:18px; cursor:pointer;' title="delete node"/>
-                
+                <img id='make-source-node-label' height=25px width=25px src="https://www.svgrepo.com/show/157849/network.svg" style='color:white; font-size:18px; cursor:pointer;' title="make source node"/>
             </div>
         ` 
     )

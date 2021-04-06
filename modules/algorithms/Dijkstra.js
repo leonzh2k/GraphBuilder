@@ -223,6 +223,7 @@ export function Dijkstra(nodeList, $start) {
     // })
     // console.log("=======================");
 }
+
 //gets amount of time required for dijkstra to run and returns it.
 export function getDijkstraTime(nodeList, $start) {
     let commandOrder = []; //command queue

@@ -1,3 +1,4 @@
+"strict mode";
 import {createNode, makeNodeDraggable} from "./modules/createNode.js"
 import {createGraphAreaContextMenu, createNodeContextMenu, showGraphAreaContextMenu, showNodeContextMenu, createEdgeContextMenu, showEdgeContextMenu, hideContextMenus} from "./modules/contextMenu.js"
 import {createGraphAreaBackground} from './modules/createGraphAreaBackground.js'
@@ -12,8 +13,8 @@ import { printAdjList } from "./modules/printAdjList.js"
 import {BFS} from "./modules/algorithms/BFS.js"
 import {DFS} from "./modules/algorithms/DFS.js"
 import * as Dijkstra from "./modules/algorithms/Dijkstra.js"
-import { Prim } from "./modules/algorithms/Prim.js"
-
+import * as Prim from "./modules/algorithms/Prim.js"
+import {flashCurrentSrcNodeDisplay} from "./modules/animations/flashCurrentSrcNodeDisplay.js"
 // import { join } from "path"
 
 jQuery(() => {
@@ -23,6 +24,7 @@ jQuery(() => {
     var $activeNode; //lets us tell what node we should be performing actions on (e.g. renaming, deleting)
     var $activeEdge; //lets us tell what edge we should be performing actions on (e.g. renaming, deleting)
     var modifyingGraphAllowed = true; // lets us disable renaming/deleting while algorithms are running
+    var $sourceNode = null; // the source node used in every algorithm
     var runningAlgosAllowed = true;
     //initialize context menus. They are hidden until called.
     var $graphArea = $("#graph-area");
@@ -93,6 +95,15 @@ jQuery(() => {
             hideNameNodeMenu($nameNodeMenu);
             let $node = createNode(nodeName, e.pageX, e.pageY);
             $node.appendTo($graphArea);
+            // // add node to list of available source nodes to choose from
+            // const newChooseableSourceNode = $(
+            //     `
+            //         <option value=${$node.data("id")}></option>
+            //     `
+            // )
+            // newChooseableSourceNode.appendTo("#chooseable-source-nodes")
+            
+
             //if this is called before it is appended the positioning is off
             $node.draggable({
                 cursor: "grab",
@@ -252,9 +263,16 @@ jQuery(() => {
                     // console.log($node1.data("neighbors"));
                 }
             })
+            //if lenght of node list is 0 before adding, automatically set to source node
+            if (nodeList.length == 0) {
+                $sourceNode = $node;
+                console.log(`source node's id: ${$node.data("id")}`);
+                $("#current-source-node").html($node.data("id"));
+                flashCurrentSrcNodeDisplay("green");
+            }
             //add node to list
             nodeList.push($node);
-            printAdjList(nodeList);
+            // printAdjList(nodeList);
         }
     })
     //shows rename node input
@@ -294,7 +312,7 @@ jQuery(() => {
             $activeNode.data("id", newName);
             //ALSO NEED TO RENAME OTHER INSTANCES OF NODE Like in other lists?
             //probably not since it is a reference
-            printAdjList(nodeList);
+            // printAdjList(nodeList);
 
         }
     })
@@ -302,6 +320,13 @@ jQuery(() => {
         //do nothing if mod graph not allowed 
         if (!modifyingGraphAllowed) {
             return;
+        }
+        if ($sourceNode === $activeNode) {
+            console.log("node to be deleted is source node")
+            $sourceNode = null;
+            $("#current-source-node").html("None")
+
+            flashCurrentSrcNodeDisplay("yellow");
         }
         //need to remove all references to node (like in other node's adj lists)
         //also need to remove all edges connected to node
@@ -328,8 +353,21 @@ jQuery(() => {
         nodeList = nodeList.filter(node => node != $activeNode);
         $activeNode.remove();
         hideContextMenus();
-        printAdjList(nodeList);
+        // printAdjList(nodeList);
     })
+
+    $("#make-source-node-label").click(function changeSourceNode(e) {
+        //do nothing if mod graph not allowed 
+        if (!modifyingGraphAllowed) {
+            return;
+        }
+        console.log("change sourc eode");
+        $sourceNode = $activeNode;
+        console.log(`source node's id: ${$activeNode.data("id")}`);
+        $("#current-source-node").html($activeNode.data("id"));
+        flashCurrentSrcNodeDisplay("green");
+    })
+
     $("#delete-edge-label").click(function deleteEdge(e) {
         //do nothing if mod graph not allowed 
         if (!modifyingGraphAllowed) {
@@ -351,7 +389,7 @@ jQuery(() => {
         }
         $activeEdge.remove();
         hideContextMenus();
-        printAdjList(nodeList);
+        // printAdjList(nodeList);
     })
 
     $("#change-edge-weight-label").click(function changeEdgeWeight(e) {
@@ -394,6 +432,10 @@ jQuery(() => {
     })
 
     $("#run-bfs-button").click(() => {
+        //if no source node selected, draw attention to the problem
+        if (!$sourceNode) {
+            flashCurrentSrcNodeDisplay("red");
+        }
         if (nodeList.length == 0 || !runningAlgosAllowed) {
             console.log("node list is empty or algo already running")
             return;
@@ -402,7 +444,7 @@ jQuery(() => {
         runningAlgosAllowed = false;
         $("#stop-algorithm-button").show();
         console.log("modifying graph disabled")
-        BFS(nodeList, nodeList[0])
+        BFS(nodeList, $sourceNode)
         //need settimeout b/c of asynchronous code in BFS()
         setTimeout(() => {
             console.log("modifying graph allowed")
@@ -414,7 +456,10 @@ jQuery(() => {
     })
 
     $("#run-dfs-button").click(() => {
-
+        //if no source node selected, draw attention to the problem
+        if (!$sourceNode) {
+            flashCurrentSrcNodeDisplay("red");
+        }
         if (nodeList.length == 0 || !runningAlgosAllowed) {
             console.log("node list is empty or algo already running")
             return;
@@ -423,7 +468,7 @@ jQuery(() => {
         runningAlgosAllowed = false;
         $("#stop-algorithm-button").show();
         console.log("modifying graph disabled")
-        DFS(nodeList, nodeList[0])
+        DFS(nodeList, $sourceNode)
         //need settimeout b/c of asynchronous code in DFS()
         setTimeout(() => {
             console.log("modifying graph allowed")
@@ -435,6 +480,10 @@ jQuery(() => {
     })
 
     $("#run-dijkstra-button").click(() => {
+        //if no source node selected, draw attention to the problem
+        if (!$sourceNode) {
+            flashCurrentSrcNodeDisplay("red");
+        }
         if (nodeList.length == 0 || !runningAlgosAllowed) {
             console.log("node list is empty or algo already running")
             return;
@@ -459,8 +508,8 @@ jQuery(() => {
         $("#stop-algorithm-button").show();
         console.log("modifying graph disabled")
         //gets time dijsktra will run so can enable modifing right after it ends
-        let delay = Dijkstra.getDijkstraTime(nodeList, nodeList[0])
-        Dijkstra.Dijkstra(nodeList, nodeList[0])
+        let delay = Dijkstra.getDijkstraTime(nodeList, $sourceNode)
+        Dijkstra.Dijkstra(nodeList, $sourceNode)
         //need settimeout b/c of asynchronous code in DFS()
         setTimeout(() => {
             console.log("modifying graph allowed")
@@ -472,6 +521,10 @@ jQuery(() => {
     })
 
     $("#run-prim-button").click(() => {
+        //if no source node selected, draw attention to the problem
+        if (!$sourceNode) {
+            flashCurrentSrcNodeDisplay("red");
+        }
         if (nodeList.length == 0 || !runningAlgosAllowed) {
             console.log("node list is empty or algorithm is already running")
             return;
@@ -480,14 +533,16 @@ jQuery(() => {
         runningAlgosAllowed = false;
         $("#stop-algorithm-button").show();
         console.log("modifying graph disabled")
-        Prim(nodeList, nodeList[0])
+        //gets time Prim will run so can enable modifing right after it ends
+        let delay = Prim.getPrimTime(nodeList, $sourceNode)
+        Prim.Prim(nodeList, $sourceNode)
         //need settimeout b/c of asynchronous code in DFS()
         setTimeout(() => {
             console.log("modifying graph allowed")
             modifyingGraphAllowed = true;
             runningAlgosAllowed = true;
             $("#stop-algorithm-button").hide();
-        }, (nodeList.length + 2) * 2000)
+        }, delay + 1000)
 
     })
     $("#stop-algorithm-button").click(() => {
@@ -537,6 +592,10 @@ jQuery(() => {
 
     $("#close-instructions-button").click(() => {
         $("#instructions").hide();
+    })
+
+    $("[list=chooseable-source-nodes]").change(() => {
+        console.log("change");
     })
 })
 
