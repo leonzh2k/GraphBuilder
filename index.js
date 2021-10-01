@@ -435,6 +435,8 @@ jQuery(() => {
         //if no source node selected, draw attention to the problem
         if (!$sourceNode) {
             flashCurrentSrcNodeDisplay("red");
+            console.log("no source node selected!")
+            return;
         }
         if (nodeList.length == 0 || !runningAlgosAllowed) {
             console.log("node list is empty or algo already running")
@@ -459,6 +461,8 @@ jQuery(() => {
         //if no source node selected, draw attention to the problem
         if (!$sourceNode) {
             flashCurrentSrcNodeDisplay("red");
+            console.log("no source node selected!")
+            return;
         }
         if (nodeList.length == 0 || !runningAlgosAllowed) {
             console.log("node list is empty or algo already running")
@@ -483,6 +487,8 @@ jQuery(() => {
         //if no source node selected, draw attention to the problem
         if (!$sourceNode) {
             flashCurrentSrcNodeDisplay("red");
+            console.log("no source node selected!")
+            return;
         }
         if (nodeList.length == 0 || !runningAlgosAllowed) {
             console.log("node list is empty or algo already running")
@@ -524,6 +530,8 @@ jQuery(() => {
         //if no source node selected, draw attention to the problem
         if (!$sourceNode) {
             flashCurrentSrcNodeDisplay("red");
+            console.log("no source node selected!")
+            return;
         }
         if (nodeList.length == 0 || !runningAlgosAllowed) {
             console.log("node list is empty or algorithm is already running")

@@ -19,7 +19,7 @@ export function showRenameNodeMenu($renameNodeMenu, mouseX, mouseY) {
     // need a delay before the focus for some reason
     setTimeout(() => {
         $("#node-rename").focus(); 
-        console.log("die")
+        // console.log("die")
     }, 1)
     return $renameNodeMenu;
 }
