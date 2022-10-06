@@ -19,7 +19,6 @@ export function showNameNodeMenu($nameNodeMenu, mouseX, mouseY) {
     // need a delay before the focus for some reason
     setTimeout(() => {
         $("#node-name").focus(); 
-        console.log("die")
     }, 1)
     return $nameNodeMenu;
 }
