@@ -15,6 +15,7 @@ import {DFS} from "./modules/algorithms/DFS.js"
 import * as Dijkstra from "./modules/algorithms/Dijkstra.js"
 import * as Prim from "./modules/algorithms/Prim.js"
 import {flashCurrentSrcNodeDisplay} from "./modules/animations/flashCurrentSrcNodeDisplay.js"
+import { sampleGraphData } from "./modules/sampleGraphData.js";
 // import { join } from "path"
 
 jQuery(() => {
@@ -40,6 +41,7 @@ jQuery(() => {
     var $changeEdgeWeightMenu = createChangeEdgeWeightMenu();
     //need to not show this if click on 
     $graphAreaBackground.on('mousedown', (e) => {
+        console.log(e.pageX, e.pageY);
         if (e.button == 2) {
             hideContextMenus(); //hides any context menus that might still be up
             //hides the node name input
@@ -605,5 +607,266 @@ jQuery(() => {
     $("[list=chooseable-source-nodes]").change(() => {
         console.log("change");
     })
+
+    // draws graph on startup so users can play around with visualization immediately
+    function drawSampleGraph() {
+        console.log(sampleGraphData.nodes)
+        const nodeNameToDOMEleMap = {
+
+        }
+        for (let node of sampleGraphData.nodes) {
+            let $node = createNode(node.name, node.pos.x, node.pos.y);
+            nodeNameToDOMEleMap[node.name] = $node;
+            $node.appendTo($graphArea);
+
+            //if this is called before it is appended the positioning is off
+            $node.draggable({
+                cursor: "grab",
+                containment: $graphArea,
+                //start and stop just applies border color to signify moving node
+                start: function() {
+                    $node.addClass("moving-node");
+                },
+                //move all neighbor edges here
+                drag: function() {
+                    // console.log("dragging")
+                    //moves all edges connected to node.
+                    $node.data("neighbors").forEach((neighbor) => {
+                        moveEdge($node, neighbor.neighbor, neighbor.edge);
+                        moveEdgeWeight($node, neighbor.neighbor, neighbor.weightDOMElement);
+                    })
+                },
+                stop: function() {
+                    $node.data("neighbors").forEach((neighbor) => {
+                        moveEdge($node, neighbor.neighbor, neighbor.edge);
+                        moveEdgeWeight($node, neighbor.neighbor, neighbor.weightDOMElement);
+                    })
+                    $node.removeClass("moving-node");
+                },
+            });
+
+            //add context menu when right click on node
+            $node.on('mousedown', (e) => {
+                $activeNode = $node;
+                hideContextMenus();
+                $nameNodeMenu.hide();
+                $renameNodeMenu.hide();
+                //resets the value in the node name input.
+                $("#node-name").val(null);
+                $("#node-rename").val(null);
+                if (e.button == 2) {
+                    // console.log("right clicked on node")
+                    showNodeContextMenu($nodeContextMenu, e.pageX, e.pageY);
+                }
+            })
+            // $node.on('moving', (e) => {
+            //     console.log('moving');
+            // })
+            //double click to focus on node
+            $node.click(function focusOnNode(e) {
+                console.log(e.pageX, e.pageY);
+                if (!modifyingGraphAllowed) {
+                    console.log("modifying graph not allowed")
+                    return
+                }
+                $node.addClass("focused-node")
+                //check that you did not select the same node twice
+                if (lockedNodes[0] == $node) {
+                    console.log("clicked the same node")
+                    lockedNodes[0].removeClass("focused-node")
+                    lockedNodes = [];
+                    return;
+                }
+                lockedNodes.push($node);
+                // console.log("lockedNodes", lockedNodes) 
+                //two focused nodes create an edge.
+                if (lockedNodes.length == 2) {
+                    let $node1 = lockedNodes[0]
+                    let $node2 = lockedNodes[1]
+                    //check if nodes are already connected
+                    for (let i = 0; i < $node1.data("neighbors").length; i++) {
+                        // console.log("hello", i.neighbor);
+                        if ($node1.data("neighbors")[i].neighbor == $node2) {
+                            console.log("edge already exists!")
+                            $node1.removeClass("focused-node")
+                            $node2.removeClass("focused-node")
+                            lockedNodes = [];
+                            return;
+                        }
+                    }
+                    for (let i = 0; i < $node2.data("neighbors").length; i++) {
+                        // console.log(i.neighbor);
+                        if ($node2.data("neighbors")[i].neighbor == $node1) {
+                            console.log("edge already exists!")
+                            $node1.removeClass("focused-node")
+                            $node2.removeClass("focused-node")
+                            lockedNodes = [];
+                            return;
+                        }
+                    }
+                    //this will automatically update neighbors in adj list since these are references
+                    //create an edge
+                    let $edge = createEdge($node1, $node2);
+                    //create weight
+                    let $edgeWeight = createEdgeWeight($node1, $node2, $graphArea)
+                    // let weight know about its edge
+                    $edgeWeight.data("edge", $edge)
+                    // let edge know about its weight
+                    $edge.data("weight", $edgeWeight);
+                    $edgeWeight.addClass("edge-weight")
+                    //
+                    $edgeWeight.click(function changeEdgeWeight(e) {
+                        // sets active edge to edge of the weight
+                        $activeEdge = $edgeWeight.data("edge")
+                        if (!modifyingGraphAllowed) {
+                            console.log("modifying graph not allowed")
+                            return;
+                        }
+                        console.log("change edge weight")
+                        hideContextMenus();
+                        // console.log($active)
+                        let activeEdgeWeightValue = Number($edgeWeight.html());
+                        showChangeEdgeWeightMenu($changeEdgeWeightMenu, e.pageX, e.pageY, activeEdgeWeightValue);
+                    })
+                    //add event listenerse
+                    $edge.on("mouseenter", (e) => {
+                        if (!modifyingGraphAllowed) {
+                            return;
+                        }
+                        $edge.addClass("hovered-edge")
+                    }).on("mouseleave", (e) => {
+                        if (!modifyingGraphAllowed) {
+                            return;
+                        }
+                        $edge.removeClass("hovered-edge")
+                    }).on("mousedown", (e) => {
+                        if (e.button == 2) {
+                            $activeEdge = $edge;
+                            hideContextMenus(); //hides any context menus that might still be up
+                            // //hides the node name input
+                            $nameNodeMenu.hide();
+                            $renameNodeMenu.hide();
+                            //resets the value in the node name input.
+                            $("#node-name").val(null);
+                            $("#node-rename").val(null);
+                            console.log("right clicked on edge")
+                            showEdgeContextMenu($edgeContextMenu, e.pageX, e.pageY);
+                        }
+                    })
+                    
+                    $node1.data("neighbors").push({
+                        neighbor: $node2,
+                        edge: $edge,
+                        // the weight as displayed on the screen
+                        weightDOMElement: $edgeWeight,
+                        weight: 1
+                    })
+                    $node2.data("neighbors").push({
+                        neighbor: $node1,
+                        edge: $edge,
+                        // the weight as displayed on the screen
+                        weightDOMElement: $edgeWeight,
+                        weight: 1
+                    })
+                    // edgeList.push({
+                        
+                    // })
+                    // printAdjList(nodeList);
+                    $edge.appendTo($graphArea);
+                    $node1.removeClass("focused-node")
+                    $node2.removeClass("focused-node")
+                    lockedNodes = [];
+                    // console.log($node1.data("neighbors"));
+                }
+            })
+            //if lenght of node list is 0 before adding, automatically set to source node
+            if (nodeList.length == 0) {
+                $sourceNode = $node;
+                console.log(`source node's id: ${$node.data("id")}`);
+                $("#current-source-node").html($node.data("id"));
+                flashCurrentSrcNodeDisplay("green");
+            }
+            //add node to list
+            nodeList.push($node);
+        }
+
+        console.log(nodeNameToDOMEleMap);
+        // create edges
+        const keys = Object.keys(sampleGraphData.edges);
+        for (let key of keys) {
+            for (let edge of sampleGraphData.edges[key]) {
+                let $node1 = nodeNameToDOMEleMap[key];
+                let $node2 = nodeNameToDOMEleMap[edge.node];
+                //create an edge
+                let $edge = createEdge($node1, $node2);
+
+                //create weight
+                let $edgeWeight = createEdgeWeight($node1, $node2, $graphArea, edge.weight);
+                // let weight know about its edge
+                $edgeWeight.data("edge", $edge)
+                // let edge know about its weight
+                $edge.data("weight", $edgeWeight);
+                $edgeWeight.addClass("edge-weight")
+                //
+                $edgeWeight.click(function changeEdgeWeight(e) {
+                    // sets active edge to edge of the weight
+                    $activeEdge = $edgeWeight.data("edge")
+                    if (!modifyingGraphAllowed) {
+                        console.log("modifying graph not allowed")
+                        return;
+                    }
+                    console.log("change edge weight")
+                    hideContextMenus();
+                    // console.log($active)
+                    let activeEdgeWeightValue = Number($edgeWeight.html());
+                    showChangeEdgeWeightMenu($changeEdgeWeightMenu, e.pageX, e.pageY, activeEdgeWeightValue);
+                })
+                //add event listenerse
+                $edge.on("mouseenter", (e) => {
+                    if (!modifyingGraphAllowed) {
+                        return;
+                    }
+                    $edge.addClass("hovered-edge")
+                }).on("mouseleave", (e) => {
+                    if (!modifyingGraphAllowed) {
+                        return;
+                    }
+                    $edge.removeClass("hovered-edge")
+                }).on("mousedown", (e) => {
+                    if (e.button == 2) {
+                        $activeEdge = $edge;
+                        hideContextMenus(); //hides any context menus that might still be up
+                        // //hides the node name input
+                        $nameNodeMenu.hide();
+                        $renameNodeMenu.hide();
+                        //resets the value in the node name input.
+                        $("#node-name").val(null);
+                        $("#node-rename").val(null);
+                        console.log("right clicked on edge")
+                        showEdgeContextMenu($edgeContextMenu, e.pageX, e.pageY);
+                    }
+                })
+                
+                $node1.data("neighbors").push({
+                    neighbor: $node2,
+                    edge: $edge,
+                    // the weight as displayed on the screen
+                    weightDOMElement: $edgeWeight,
+                    weight: edge.weight,
+                })
+                $node2.data("neighbors").push({
+                    neighbor: $node1,
+                    edge: $edge,
+                    // the weight as displayed on the screen
+                    weightDOMElement: $edgeWeight,
+                    weight: edge.weight,
+                })
+
+                $edge.appendTo($graphArea);
+            }
+        }
+    }
+
+    drawSampleGraph();
 })
 

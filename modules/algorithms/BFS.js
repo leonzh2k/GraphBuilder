@@ -74,7 +74,7 @@ export function BFS(nodeList, $root) {
                 })
                 // $currNode.css("border-color", "green")
             }, delay)
-            delay += 2000;
+            delay += 700;
         }
         
         // iterations++;

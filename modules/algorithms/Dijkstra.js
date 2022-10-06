@@ -145,7 +145,7 @@ export function Dijkstra(nodeList, $start) {
     }
     console.log(commandOrder)
     let delay = 1000;
-    let speedScale = 1000; //delay between steps
+    let speedScale = 500; //delay between steps
     commandOrder.forEach(command => {
         if (command.command == "finalize") {
             setTimeout(() => {

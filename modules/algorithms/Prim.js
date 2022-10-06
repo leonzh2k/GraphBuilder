@@ -77,7 +77,7 @@ export function Prim(nodeList, $start) {
         node.data("inMST", false)
     })
     let delay = 1000;
-    let speedScale = 1000; //delay between steps
+    let speedScale = 500; //delay between steps
     commandOrder.forEach(command => {
         if (command.command == "firstNode") {
             setTimeout(() => {

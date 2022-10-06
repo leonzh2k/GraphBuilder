@@ -35,7 +35,6 @@ export function DFS(nodeList, $root) {
         visitOrder.push($currNode.data("id"))
         let nodesToDiscover = [];
         if ($currNode.data("visited") == false) {
-
             $currNode.data("neighbors").forEach(node => {
                 let $currNeighbor = node.neighbor
                 if ($currNeighbor.data("visited") == false) {
@@ -56,6 +55,7 @@ export function DFS(nodeList, $root) {
             $currNode.data("neighbors").forEach(node => {
                 let $currNeighbor = node.neighbor
                 if ($currNeighbor.data("visited") == false) {
+                    allNeighborsAlreadyVisited = false;
                     stack.push($currNeighbor)
                     // commandOrder.push({
                     //     node: $currNeighbor,
